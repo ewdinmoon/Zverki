@@ -37,9 +37,12 @@ public class MainActivity extends Activity {
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
+        s.setAllowFileAccessFromFileURLs(true);
+        s.setAllowUniversalAccessFromFileURLs(true);
 
         web.setWebViewClient(new WebViewClient());
         web.setWebChromeClient(new WebChromeClient());
+        WebView.setWebContentsDebuggingEnabled(true);
         web.setBackgroundColor(0xFF0A1830);
         web.loadUrl("file:///android_asset/game/index.html");
 
