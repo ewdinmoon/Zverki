@@ -350,7 +350,14 @@ class Game extends Phaser.Scene{
   this.load.on('loadstart',function(f){ try{window.__pend[f.key]=1;}catch(e){} });
   this.load.on('load',function(f){ try{delete window.__pend[f.key];}catch(e){} });
   this.load.on('loaderror',function(f){ try{delete window.__pend[f.key];}catch(e){} });
-  this.time.addEvent({delay:12000,callback:function(){ try{var ks=[];for(var k in window.__pend){ks.push(k);} if(ks.length){window.__showErr('STUCK: '+ks.join(','));} else {window.__showErr('PEND EMPTY, no complete');} }catch(e){} }});
+    var sc=this;
+  this.time.addEvent({delay:12000,callback:function(){ try{
+   var L=sc.load, ks=[], inf=[], lst=[], i;
+   for(var k in window.__pend){ks.push(k);}
+   if(L.inflight){for(i=0;i<L.inflight.length;i++){inf.push(L.inflight[i].key);}}
+   if(L.list){for(i=0;i<L.list.length;i++){lst.push(L.list[i].key);}}
+   window.__showErr('INF:'+inf.join(',')+' | LIST:'+lst.join(',')+' | PEND:'+ks.join(',')+' | tot:'+L.totalFilesToLoad+' ld:'+L.totalFilesLoaded);
+  }catch(e){window.__showErr('WD ERR '+e.message);} }});
   this.load.image('bg',svgURL(BG_SVG));
   for(var s=0;s<SPECIES.length;s++){for(var f=1;f<=3;f++){this.load.image('an_'+SPECIES[s].id+'_'+f,svgURL(animalSVG(SPECIES[s],f)));}}
   this.load.image('boss',svgURL(BOSS_SVG));
