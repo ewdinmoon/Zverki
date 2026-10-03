@@ -14,6 +14,7 @@ canvas{touch-action:none}
 <div id="app"></div>
 <script src="phaser.min.js"></script>
 <script>
+window.__err=[];window.__showErr=function(m){window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
 var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='51';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
@@ -343,6 +344,8 @@ class Game extends Phaser.Scene{
   var txt=this.add.text(W/2,H/2-40,t('loading')+'...',{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#ffe08a',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(200);
   this.load.on('progress',function(p){ bar.clear(); bar.fillStyle(0x0e1f3a,1); bar.fillRoundedRect(W/2-120,H/2-10,240,24,12); bar.fillStyle(0x6fd06f,1); bar.fillRoundedRect(W/2-116,H/2-6,Math.max(8,232*p),16,8); txt.setText(t('loading')+Math.round(p*100)+'%'); });
   this.load.on('complete',function(){ bar.destroy(); txt.destroy(); });
+  this.load.on('loaderror',function(f){ try{window.__showErr('LOAD FAIL: '+(f.src||f.key));}catch(e){} });
+  this.load.on('complete',function(){ try{window.__showErr('LOAD OK');}catch(e){} });
   this.load.image('bg',svgURL(BG_SVG));
   for(var s=0;s<SPECIES.length;s++){for(var f=1;f<=3;f++){this.load.image('an_'+SPECIES[s].id+'_'+f,svgURL(animalSVG(SPECIES[s],f)));}}
   this.load.image('boss',svgURL(BOSS_SVG));
@@ -468,6 +471,7 @@ class Game extends Phaser.Scene{
  }
  create(){
   var self=this;SCENE=this;
+  try{window.__showErr('CREATE START');}catch(e){}
   this.screen='menu';this.overlayActive=false;this.screenObjects=[];this.overlayObjects=[];this.miniActive=false;this.bossActive=false;this.meteorStarted=false;this.floats=[];this.petTween=null;this.bossHitTween=null;this.tapReset=null;this.critTint=null;this.comboTimer=null;this.museumTab=0;this.museumPage=0;this.bossImg=null;this.bossAura=null;this.bossHpFill=null;this.bossHpText=null;this.bossName=null;this.bossBy=360;this.rewardQueue=[];this.petsPage=0;this.gameStarted=false;this.pendingOffline=0;this.bossHallId='forest';this.bossSpId='ham';this._paused=false;this.turtleBad=false;
   (function(){ var cv=document.createElement('canvas');cv.width=64;cv.height=64;var cx=cv.getContext('2d');var gr=cx.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.4,'rgba(255,255,255,0.55)');gr.addColorStop(1,'rgba(255,255,255,0)');cx.fillStyle=gr;cx.fillRect(0,0,64,64); self.textures.addCanvas('radialDot',cv); })();
   this.input.on('pointerdown',function(){ac(); if(state&&state.sound){bgmStart();} });
@@ -509,6 +513,7 @@ class Game extends Phaser.Scene{
   var s0=34/nw;
   this.coinParticles=this.add.particles(0,0,ck0,{speed:{min:120,max:260},angle:{min:200,max:340},gravityY:600,scale:{start:s0,end:s0*0.4},lifespan:700,emitting:false}).setDepth(60);
  }
+  try{window.__showErr('CREATE DONE');}catch(e){}
  setNavVisible(v){
   var i;
   if(this.navObjs){for(i=0;i<this.navObjs.length;i++){this.navObjs[i].setVisible(v);}}
