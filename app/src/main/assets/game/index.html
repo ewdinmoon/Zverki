@@ -77,7 +77,7 @@ window.onAdReward=function(){ var c=window.__adCb; window.__adCb=null; if(c)c();
 window.onAdClose=function(){ window.__adCb=null; pauseGame(false); };
 /* ---------- helpers ---------- */
 function svgURL(s){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);}
-function artURL(p){return 'assets/art/'+p+'?v='+ASSET_V;}
+function artURL(p){return 'assets/art/'+p;}
 function makeTransparent(sc,key,hard){
  var src=sc.textures.get(key);if(!src)return null;
  var img=src.getSourceImage?src.getSourceImage():null;if(!img||!img.width)return null;
