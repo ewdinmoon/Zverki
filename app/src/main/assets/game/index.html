@@ -16,7 +16,7 @@ canvas{touch-action:none}
 <script>
 window.__err=[];window.__showErr=function(m){window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='51';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='52';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -512,8 +512,8 @@ class Game extends Phaser.Scene{
   try{ var csrc=this.textures.get(ck0); var cimg=csrc&&csrc.getSourceImage&&csrc.getSourceImage(); if(cimg&&cimg.width){nw=cimg.width;} }catch(e){}
   var s0=34/nw;
   this.coinParticles=this.add.particles(0,0,ck0,{speed:{min:120,max:260},angle:{min:200,max:340},gravityY:600,scale:{start:s0,end:s0*0.4},lifespan:700,emitting:false}).setDepth(60);
+  try{window.__showErr('CREATE DONE');setTimeout(function(){var bad=false;for(var i2=0;i2<window.__err.length;i2++){if(window.__err[i2].indexOf('JS:')===0||window.__err[i2].indexOf('LOAD FAIL')===0){bad=true;break;}}var d=document.getElementById('errbox');if(d&&!bad){d.style.display='none';}},2500);}catch(e){}
  }
-  try{window.__showErr('CREATE DONE');}catch(e){}
  setNavVisible(v){
   var i;
   if(this.navObjs){for(i=0;i<this.navObjs.length;i++){this.navObjs[i].setVisible(v);}}
@@ -619,7 +619,7 @@ class Game extends Phaser.Scene{
   var fill=this.addS(this.add.graphics().setDepth(6));
   fill.fillStyle(0x6fd06f,1);fill.fillRoundedRect(px0+2,py+2,fw-4,10,5);
   fill.fillStyle(0xffffff,0.35);fill.fillRoundedRect(px0+2,py+2,fw-4,4,2);
-  this.addS(this.add.text(W/2,py+7,tf('menu_collected',{a:gotN,b:total}).replace(tf('menu_collected',{a:gotN,b:total}).split(' ')[0]+' ',''),{fontSize:11,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(7));
+  this.addS(this.add.text(W/2,py+7,gotN+' / '+total,{fontSize:11,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(7));
   var spots=[['ham',0.28,0.40,100],['frog',0.55,0.50,95],['cat',0.82,0.40,90],['hen',0.16,0.55,85],['duck',0.14,0.72,85],['turtle',0.40,0.66,80],['drag',0.66,0.70,80],['alien',0.88,0.66,80],['jelly',0.20,0.30,75],['unimech',0.72,0.30,75],['golem',0.86,0.82,75]];
   for(var i=0;i<spots.length;i++){
    var id=spots[i][0];
@@ -627,12 +627,11 @@ class Game extends Phaser.Scene{
    if(ck&&this.textures.exists(ck)){
     var fx=spots[i][1],fy=spots[i][2],fs=spots[i][3];
     var baseY=H*fy;
-        var im=this.addS(this.add.image(W*fx,baseY,ck).setDisplaySize(fs,fs).setDepth(5));
+    var im=this.addS(this.add.image(W*fx,baseY,ck).setDisplaySize(fs,fs).setDepth(5));
     var bs=im.scaleX;
     im.setScale(bs*0.2);
     this.tweens.add({targets:im,scaleX:bs,scaleY:bs,duration:500,delay:i*70,ease:'Back.out'});
     this.tweens.add({targets:im,y:baseY-9,duration:900+i*70,yoyo:true,repeat:-1,ease:'Sine.inOut',delay:600});
-    this.tweens.add({targets:im,angle:4,duration:1400+i*90,yoyo:true,repeat:-1,ease:'Sine.inOut',delay:600});
     this.tweens.add({targets:im,angle:4,duration:1400+i*90,yoyo:true,repeat:-1,ease:'Sine.inOut',delay:600});
    }
   }
