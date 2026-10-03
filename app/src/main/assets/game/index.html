@@ -346,6 +346,11 @@ class Game extends Phaser.Scene{
   this.load.on('complete',function(){ bar.destroy(); txt.destroy(); });
   this.load.on('loaderror',function(f){ try{window.__showErr('LOAD FAIL: '+(f.src||f.key));}catch(e){} });
   this.load.on('complete',function(){ try{window.__showErr('LOAD OK');}catch(e){} });
+  window.__pend={};
+  this.load.on('loadstart',function(f){ try{window.__pend[f.key]=1;}catch(e){} });
+  this.load.on('load',function(f){ try{delete window.__pend[f.key];}catch(e){} });
+  this.load.on('loaderror',function(f){ try{delete window.__pend[f.key];}catch(e){} });
+  this.time.addEvent({delay:12000,callback:function(){ try{var ks=[];for(var k in window.__pend){ks.push(k);} if(ks.length){window.__showErr('STUCK: '+ks.join(','));} else {window.__showErr('PEND EMPTY, no complete');} }catch(e){} }});
   this.load.image('bg',svgURL(BG_SVG));
   for(var s=0;s<SPECIES.length;s++){for(var f=1;f<=3;f++){this.load.image('an_'+SPECIES[s].id+'_'+f,svgURL(animalSVG(SPECIES[s],f)));}}
   this.load.image('boss',svgURL(BOSS_SVG));
