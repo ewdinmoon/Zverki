@@ -847,7 +847,7 @@ class Game extends Phaser.Scene{
   state.combo++;this.bossHp-=dmg;bumpQuest('boss',0);
   sfx('hit');
   if(this.bossImg){ this.bossImg.setTint(0xffffff); var bi2=this.bossImg; this.time.delayedCall(60,function(){ if(bi2)bi2.clearTint(); }); }
-  this.cameras.shake(isCrit?120:60, isCrit?0.01:0.005);
+  this.cameras.main.shake(isCrit?120:60, isCrit?0.01:0.005);
   var col=isCrit?'#ff5050':'#ffe08a';
   var ft=this.add.text(x+(Math.random()*30-15),y-20,(isCrit?'КРИТ! -':'-')+fmt(dmg),{fontSize:isCrit?FS.lg:FS.med,fontStyle:'bold',fontFamily:FF,color:col,stroke:'#5a0000',strokeThickness:3}).setOrigin(0.5).setDepth(60);
   this.tweens.add({targets:ft,y:y-70,alpha:0,duration:700,onComplete:function(){ft.destroy();}});
@@ -1626,7 +1626,7 @@ class Game extends Phaser.Scene{
    if(best){
     best._caught=true; score+=best._golden?5000:500; sfx('coin');
     try{window.__showErr('CATCH '+score);}catch(e){}
-    scoreT.setText(t('caught')+fmt(score));
+    scoreT.setText((state.lang==='en'?'Caught: ':'Поймано: ')+fmt(score));
     var ii=fallings.indexOf(best); if(ii>=0)fallings.splice(ii,1);
     self.tweens.killTweensOf(best);
     self.tweens.add({targets:best,scaleX:1.12,scaleY:1.12,alpha:0,duration:110,onComplete:function(){best.destroy();}});
