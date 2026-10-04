@@ -16,7 +16,7 @@ canvas{touch-action:none}
 <script>
 window.__err=[];window.__showErr=function(m){window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='52';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='53';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -82,9 +82,10 @@ function artURL(p){return 'assets/art/'+p;}
 function makeTransparent(sc,key,hard){
  var src=sc.textures.get(key);if(!src)return null;
  var img=src.getSourceImage?src.getSourceImage():null;if(!img||!img.width)return null;
- var sw=img.width,sh=img.height;
+ var sc0=Math.min(1,512/Math.max(img.width,img.height));
+ var sw=Math.max(2,Math.round(img.width*sc0)),sh=Math.max(2,Math.round(img.height*sc0));
  var cv=document.createElement('canvas');cv.width=sw;cv.height=sh;
- var cx=cv.getContext('2d');cx.drawImage(img,0,0);
+ var cx=cv.getContext('2d');cx.imageSmoothingEnabled=true;cx.drawImage(img,0,0,sw,sh);
  var d=cx.getImageData(0,0,sw,sh);var px=d.data;
  var c1=(2*sw+2)*4,c2=(2*sw+sw-3)*4,c3=((sh-3)*sw+2)*4,c4=((sh-3)*sw+sw-3)*4;
  var br=(px[c1]+px[c2]+px[c3]+px[c4])/4, bgc=(px[c1+1]+px[c2+1]+px[c3+1]+px[c4+1])/4, bb=(px[c1+2]+px[c2+2]+px[c3+2]+px[c4+2])/4;
@@ -350,7 +351,7 @@ class Game extends Phaser.Scene{
   this.load.on('loadstart',function(f){ try{window.__pend[f.key]=1;}catch(e){} });
   this.load.on('load',function(f){ try{delete window.__pend[f.key];}catch(e){} });
   this.load.on('loaderror',function(f){ try{delete window.__pend[f.key];}catch(e){} });
-    var sc=this;
+  var sc=this;
   this.time.addEvent({delay:12000,callback:function(){ try{
    var L=sc.load, ks=[], inf=[], lst=[], i;
    for(var k in window.__pend){ks.push(k);}
@@ -497,11 +498,11 @@ class Game extends Phaser.Scene{
   this.ambient=this.add.particles(W/2,H/2,'radialDot',{x:{min:0,max:W},y:{min:H*0.3,max:H},speedY:{min:-12,max:-30},speedX:{min:-6,max:6},scale:{start:0.5,end:0},alpha:{start:0.35,end:0},lifespan:5000,frequency:260,blendMode:'ADD',tint:[0xfff6c0,0x9fe0ff,0xffd23e]}).setDepth(1);
   var chars=[];for(var k in ART_CHAR){chars.push(ART_CHAR[k]);}
   chars=chars.concat(['art_boss']);
-  for(var i=0;i<chars.length;i++){if(this.textures.exists(chars[i])){makeTransparent(this,chars[i],false);}}
+  for(var i=0;i<chars.length;i++){if(this.textures.exists(chars[i])){if(makeTransparent(this,chars[i],false)){this.textures.remove(chars[i]);}}}
   var softUis=['art_leaf','art_bone','art_paw','art_tree'];
   var hardUis=['art_chest','art_gem','art_coin','art_dust','art_gear','art_perk'];
-  for(var s=0;s<softUis.length;s++){if(this.textures.exists(softUis[s])){makeTransparent(this,softUis[s],false);}}
-  for(var h=0;h<hardUis.length;h++){if(this.textures.exists(hardUis[h])){makeTransparent(this,hardUis[h],true);}}
+  for(var s=0;s<softUis.length;s++){if(this.textures.exists(softUis[s])){if(makeTransparent(this,softUis[s],false)){this.textures.remove(softUis[s]);}}}
+  for(var h=0;h<hardUis.length;h++){if(this.textures.exists(hardUis[h])){if(makeTransparent(this,hardUis[h],true)){this.textures.remove(hardUis[h]);}}}
   if(this.textures.exists('art_perk_t')){this.makeCrop('art_perk_t','art_perk_c',0.14);}
   try{
    var tt=this.textures.get('art_turtle_t');
@@ -1667,7 +1668,7 @@ class Game extends Phaser.Scene{
   if(this._tt){this._tt.destroy();}
   this._tt=this.add.text(W/2,200,t2,{fontSize:FS.base,fontStyle:'bold',fontFamily:FF,color:'#ffe08a',backgroundColor:'rgba(16,38,74,0.95)',padding:{x:16,y:10},stroke:STK.brown,strokeThickness:2}).setOrigin(0.5).setDepth(80);
   var self=this;
-  this.time.delayedCall(2200,function(){if(self._tt){self._tt.destroy();self._tt=null;}});
+  this.time.delayedCall(2200,function(){if(self._tt){this._tt=null;self._tt=null;}});
  }
 }
 var booted=false;
