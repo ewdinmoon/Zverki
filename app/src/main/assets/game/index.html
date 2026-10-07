@@ -16,7 +16,7 @@ canvas{touch-action:none}
 <script>
 window.__err=[];window.__showErr=function(m){window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='55';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='56';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -90,11 +90,10 @@ function makeTransparent(sc,key,hard){
  var c1=(2*sw+2)*4,c2=(2*sw+sw-3)*4,c3=((sh-3)*sw+2)*4,c4=((sh-3)*sw+sw-3)*4;
  var br=(px[c1]+px[c2]+px[c3]+px[c4])/4, bgc=(px[c1+1]+px[c2+1]+px[c3+1]+px[c4+1])/4, bb=(px[c1+2]+px[c2+2]+px[c3+2]+px[c4+2])/4;
  var thr=hard?90:100;
- var aL=thr*0.55,aH=thr*1.25;
  for(var i=0;i<px.length;i+=4){
   var r=px[i],g=px[i+1],b=px[i+2];
   var md=Math.max(Math.abs(r-br),Math.abs(g-bgc),Math.abs(b-bb));
-  px[i+3]=md<=aL?0:(md>=aH?255:Math.round((md-aL)/(aH-aL)*255));
+  px[i+3]=(md<thr)?0:255;
  }
  var visited=new Uint8Array(sw*sh);
  var stack=new Int32Array(sw*sh); var spn=0;
@@ -145,6 +144,25 @@ function makeTransparent(sc,key,hard){
   }
   cx.putImageData(d,0,0);
  })();
+ for(var pass=0;pass<2;pass++){
+  for(var yq=0;yq<sh;yq++){for(var xq=0;xq<sw;xq++){
+   var iq=(yq*sw+xq)*4;
+   if(px[iq+3]>0 && px[iq]>235 && px[iq+1]>235 && px[iq+2]>235){
+    var nb=false;
+    if(xq>0&&px[iq-4+3]===0){nb=true;} else if(xq<sw-1&&px[iq+4+3]===0){nb=true;} else if(yq>0&&px[iq-sw*4+3]===0){nb=true;} else if(yq<sh-1&&px[iq+sw*4+3]===0){nb=true;}
+    if(nb){px[iq+3]=0;}
+   }
+  }}
+ }
+ for(var yf=0;yf<sh;yf++){for(var xf=0;xf<sw;xf++){
+  var if4=(yf*sw+xf)*4;
+  if(px[if4+3]>0){
+   var edge=false;
+   if(xf>0&&px[if4-4+3]===0){edge=true;} else if(xf<sw-1&&px[if4+4+3]===0){edge=true;} else if(yf>0&&px[if4-sw*4+3]===0){edge=true;} else if(yf<sh-1&&px[if4+sw*4+3]===0){edge=true;}
+   if(edge){px[if4+3]=140;}
+  }
+ }}
+ cx.putImageData(d,0,0);
  var minx=sw,miny=sh,maxx=-1,maxy=-1;
  for(var y=0;y<sh;y++)for(var x=0;x<sw;x++){if(px[(y*sw+x)*4+3]>150){if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;}}
  if(maxx<0)return null;
@@ -254,11 +272,11 @@ function inUnlockedHalls(sp){for(var i=0;i<HALLS.length;i++){var h=HALLS[i];if(h
 function missingSpecies(){var m=[];for(var i=0;i<HALLS.length;i++){var h=HALLS[i];if(hallUnlocked(h)){var uc=unlockedCount(h);for(var j=0;j<uc;j++){if(!state.unlocked[h.species[j]]){m.push(speciesById(h.species[j]));}}}}return m;}
 function formIncome(f){return f===1?2:(f===2?6:18);}
 function formLabel(f){return f===1?'I':(f===2?'II':'III');}
-function clickPower(lv){return 10+5*lv+Math.floor(Math.pow(lv,1.5)/2);}
+function clickPower(lv){return 10+Math.floor(5.5*lv)+Math.floor(Math.pow(lv,1.6)/2.2);}
 function clickCost(lv){if(lv<50){return Math.floor(25*Math.pow(1.35,lv));}var base=25*Math.pow(1.35,49);return Math.floor(base*Math.pow(1.10,lv-49));}
 function autoIncome(lv){return 5*lv;}
 function autoCost(lv){return Math.floor(100*Math.pow(1.4,lv));}
-function critChance(lv){return Math.min(0.20,0.05+0.02*lv);}
+function critChance(lv){return Math.min(0.60,0.05+0.02*lv);}
 function critCost(lv){return Math.floor(250*Math.pow(1.55,lv));}
 function comboMult(c){if(c>=75){return 2;}if(c>=50){return 1.75;}if(c>=25){return 1.5;}if(c>=10){return 1.25;}return 1;}
 function chestCost(n){return Math.floor(500*Math.pow(1.5,n)*Math.pow(CHEST_HALL_MULT,worldHallIdx()-1));}
@@ -641,7 +659,7 @@ class Game extends Phaser.Scene{
   fill.fillStyle(0x6fd06f,1);fill.fillRoundedRect(px0+2,py+2,fw-4,10,5);
   fill.fillStyle(0xffffff,0.35);fill.fillRoundedRect(px0+2,py+2,fw-4,4,2);
   this.addS(this.add.text(W/2,py+7,gotN+' / '+total,{fontSize:11,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(7));
-  var spots=[['ham',0.28,0.40,100],['frog',0.55,0.50,95],['cat',0.82,0.40,90],['hen',0.16,0.55,85],['duck',0.14,0.72,85],['turtle',0.40,0.66,80],['drag',0.66,0.70,80],['alien',0.88,0.66,80],['jelly',0.20,0.30,75],['unimech',0.72,0.30,75],['golem',0.86,0.82,75]];
+  var spots=[['jelly',0.16,0.28,58],['unimech',0.50,0.27,58],['cat',0.84,0.28,58],['ham',0.26,0.42,66],['frog',0.62,0.42,62],['hen',0.12,0.57,56],['turtle',0.44,0.57,56],['drag',0.76,0.57,56],['duck',0.20,0.70,56],['alien',0.55,0.70,56],['golem',0.86,0.70,56]];
   for(var i=0;i<spots.length;i++){
    var id=spots[i][0];
    var ck=this.charKeyB(id);
@@ -1122,6 +1140,26 @@ class Game extends Phaser.Scene{
     gy+=66;
    })(PERKS[i]);
   }
+  (function(){
+   try{
+    var row=self.addO(self.add.graphics().setDepth(72));
+    row.fillStyle(0x0e1f3a,0.9);row.fillRoundedRect(40,gy,400,58,10);
+    row.lineStyle(2,0x4aa8e8,1);row.strokeRoundedRect(40,gy,400,58,10);
+    self.addO(self.add.text(54,gy+18,(state.lang==='en'?'Exchange: 10 gems → 1 dust':'Обмен: 10 кристаллов → 1 пыль'),{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0,0.5).setDepth(73));
+    self.addO(self.add.text(54,gy+40,(state.lang==='en'?'Spend crystals on star dust':'Трать кристаллы на звёздную пыль'),{fontSize:FS.xs,fontFamily:FF,color:'#cfe6ff',stroke:STK.brown,strokeThickness:2}).setOrigin(0,0.5).setDepth(73));
+    var can=state.gems>=10;
+    var bg=self.addO(self.add.graphics().setDepth(73));
+    if(can){self.sticker(bg,340,gy+13,90,32,8,0x4aa8e8,0x1a60b0);}else{self.sticker(bg,340,gy+13,90,32,8,0x6a5030,0x3a2810);}
+    self.addO(self.add.text(378,gy+29,'10',{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(74));
+    self.addO(self.add.image(408,gy+29,self.iconKey('art_gem','gem',64)).setDisplaySize(18,18).setOrigin(0.5,0.5).setDepth(74));
+    var hit=self.addO(self.add.rectangle(385,gy+29,90,32).setInteractive({useHandCursor:true}).setDepth(75));
+    hit.on('pointerup',function(){
+     if(state.gems<10){sfx('err');self.toast(t('toast_nogems'));return;}
+     state.gems-=10;state.dust+=1;save();sfx('coin');
+     self.clearOverlay();self.openPerks();
+    });
+   }catch(e){}
+  })();
   self.addClose(W/2+189,H/2-254,function(){sfx('ui');self.clearOverlay();});
  }
  openSettings(){
@@ -1453,7 +1491,7 @@ class Game extends Phaser.Scene{
   if(!hallUnlocked(h)){
    var prev=hallById(h.unlock.hall);
    this.addS(this.add.text(W/2,gy+40,tf('mus_locked',{h:hallName(h)}),{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#ff9a9a',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
-   this.addS(this.add.text(W/2,gy+75,tf('mus_prev',{h:hallName(prev)}),{fontSize:FS.sm,fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
+   this.addS(this.add.text(W/2,gy+75,tf('mus_prev',{h:hallName(prev)}),{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
    this.addS(this.add.text(W/2,gy+140,tf('mus_reward',{a:Math.round(h.bonus*100*rankOf(h))}),{fontSize:FS.xs,fontFamily:FF,color:'#9fe0ff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
    return;
   }
@@ -1636,7 +1674,7 @@ class Game extends Phaser.Scene{
     if(dist<=70){ var sc=t.y - dist*0.3; if(sc>bestScore){bestScore=sc;best=t;} }
    }
    if(best){
-    best._caught=true; score+=best._golden?5000:500; sfx('coin');
+    best._caught=true; score+=best._golden?3300:330; sfx('coin');
     try{window.__showErr('CATCH '+score);}catch(e){}
     scoreT.setText((state.lang==='en'?'Caught: ':'Поймано: ')+fmt(score));
     var ii=fallings.indexOf(best); if(ii>=0)fallings.splice(ii,1);
