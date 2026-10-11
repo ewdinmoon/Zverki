@@ -16,7 +16,7 @@ canvas{touch-action:none}
 <script>
 window.__err=[];window.__showErr=function(m){window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='56';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='58';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -144,16 +144,6 @@ function makeTransparent(sc,key,hard){
   }
   cx.putImageData(d,0,0);
  })();
- for(var pass=0;pass<2;pass++){
-  for(var yq=0;yq<sh;yq++){for(var xq=0;xq<sw;xq++){
-   var iq=(yq*sw+xq)*4;
-   if(px[iq+3]>0 && px[iq]>235 && px[iq+1]>235 && px[iq+2]>235){
-    var nb=false;
-    if(xq>0&&px[iq-4+3]===0){nb=true;} else if(xq<sw-1&&px[iq+4+3]===0){nb=true;} else if(yq>0&&px[iq-sw*4+3]===0){nb=true;} else if(yq<sh-1&&px[iq+sw*4+3]===0){nb=true;}
-    if(nb){px[iq+3]=0;}
-   }
-  }}
- }
  for(var yf=0;yf<sh;yf++){for(var xf=0;xf<sw;xf++){
   var if4=(yf*sw+xf)*4;
   if(px[if4+3]>0){
@@ -392,7 +382,7 @@ class Game extends Phaser.Scene{
   this.load.image('gem',svgURL(GEM_SVG));
   this.load.image('dust',svgURL(DUST_SVG));
   this.load.image('chestv',svgURL(CHEST_SVG));
-  var arts=['art_ham:hero_ham.png','art_frog:char_frog.png','art_cat:char_cat.png','art_hen:char_hen.png','art_duck:char_duck.png','art_turtle:char_turtle.png','art_octo:char_octo.png','art_crab:char_crab.png','art_shark:char_shark.png','art_jelly:char_jelly.png','art_drag:char_drag.png','art_phoenix:char_phoenix.png','art_lizard:char_lizard.png','art_golem:char_golem.png','art_salam:char_salam.png','art_alien:char_alien.png','art_dog:char_dog.png','art_owl:char_owl.png','art_capy:char_capy.png','art_robotcat:char_robotcat.png','art_donut:char_donut.png','art_gummy:char_gummy.png','art_cupcake:char_cupcake.png','art_choco:char_choco.png','art_lolly:char_lolly.png','art_penguin:char_penguin.png','art_walrus:char_walrus.png','art_polar:char_polar.png','art_leopard:char_leopard.png','art_seal:char_seal.png','art_roboham:char_roboham.png','art_unimech:char_unimech.png','art_beetle:char_beetle.png','art_beedrone:char_beedrone.png','art_mouseprog:char_mouseprog.png','art_boss:boss_ham.png','art_chest:ui_chest.png','art_gem:ui_gem.png','art_coin:ui_coin.png','art_dust:ui_dust.png','art_gear:ui_gear.png','art_perk:ui_perk.png','art_leaf:ui_leaf.png','art_bone:ui_bone.png','art_paw:ui_paw.png','art_tree:ui_tree.png','art_aura:ui_boss_aura.png','art_bg_forest:bg_forest.png','art_bg_ocean:bg_ocean.png','art_bg_volcano:bg_volcano.png','art_bg_space:bg_space.png','art_bg_candy:bg_candy.png','art_bg_ice:bg_ice.png','art_bg_tech:bg_tech.png','art_bg_menu:bg_menu.png'];
+  var arts=['art_ham:hero_ham.png','art_frog:char_frog.png','art_cat:char_cat.png','art_hen:char_hen.png','art_duck:char_duck.png','art_turtle:char_turtle.png','art_octo:char_octo.png','art_crab:char_crab.png','art_shark:char_shark.png','art_jelly:char_jelly.png','art_drag:char_drag.png','art_phoenix:char_phoenix.png','art_lizard:char_lizard.png','art_golem:char_golem.png','art_salam:char_salam.png','art_alien:char_alien.png','art_dog:char_dog.png','art_owl:char_owl.png','art_capy:char_capy.png','art_robotcat:char_robotcat.png','art_donut:char_donut.png','art_gummy:char_gummy.png','art_cupcake:char_cupcake.png','art_choco:char_choco.png','art_lolly:char_lolly.png','art_penguin:char_penguin.png','art_walrus:char_walrus.png','art_polar:char_polar.png','art_leopard:char_leopard.png','art_seal:char_seal.png','art_roboham:char_roboham.png','art_unimech:char_unimech.png','art_beetle:char_beetle.png','art_beedrone:char_beedrone.png','art_mouseprog:char_mouseprog.png','art_chest:ui_chest.png','art_gem:ui_gem.png','art_coin:ui_coin.png','art_dust:ui_dust.png','art_gear:ui_gear.png','art_perk:ui_perk.png','art_leaf:ui_leaf.png','art_bone:ui_bone.png','art_paw:ui_paw.png','art_tree:ui_tree.png','art_aura:ui_boss_aura.png','art_bg_forest:bg_forest.png','art_bg_ocean:bg_ocean.png','art_bg_volcano:bg_volcano.png','art_bg_space:bg_space.png','art_bg_candy:bg_candy.png','art_bg_ice:bg_ice.png','art_bg_tech:bg_tech.png','art_bg_menu:bg_menu.png'];
   for(var i=0;i<arts.length;i++){var pr=arts[i].split(':');this.load.image(pr[0],artURL(pr[1]));}
  }
  addS(o){this.screenObjects.push(o);return o;}
@@ -408,7 +398,7 @@ class Game extends Phaser.Scene{
  baseClickDmg(){return clickPower(state.clickLv)*perkMult('click')*this.activeMult()*museumMult()*prestigeMult();}
  charKey(spId){ if(spId==='turtle'&&this.turtleBad){return 'an_turtle_1';} var k=ART_CHAR[spId];if(!k)return null;if(this.textures.exists(k+'_t')){return k+'_t';}return null;}
  charKeyB(spId){ if(spId==='turtle'&&this.turtleBad){return 'an_turtle_1';} var k=ART_CHAR[spId];if(k&&this.textures.exists(k+'_t')){return k+'_t';}return null;}
- petDisplayKey(spId,form){var ck=this.charKey(spId);if(ck){return ck;}var v='an_'+spId+'_'+form;if(!this.textures.exists(v)){v='an_'+spId+'_1';}return v;}
+ petDisplayKey(spId,form){var ck=this.charKey(spId);if(ck){return ck;}var v='an_'+spId+'_'+form;if(!this.textures.exists(v)){v='an_'+spId+'1';}return v;}
  petDisplayKeyB(spId,form){var ck=this.charKeyB(spId);if(ck){return ck;}var v='an_'+spId+'_'+form;if(!this.textures.exists(v)){v='an_'+spId+'_1';}return v;}
  smoothIcon(art,px){
   var tk=art+'_t';
@@ -523,7 +513,6 @@ class Game extends Phaser.Scene{
   this.liftG.fillStyle(0xffffff,0.05);this.liftG.fillCircle(W/2,H*0.45,260);
   this.ambient=this.add.particles(W/2,H/2,'radialDot',{x:{min:0,max:W},y:{min:H*0.3,max:H},speedY:{min:-12,max:-30},speedX:{min:-6,max:6},scale:{start:0.5,end:0},alpha:{start:0.35,end:0},lifespan:5000,frequency:260,blendMode:'ADD',tint:[0xfff6c0,0x9fe0ff,0xffd23e]}).setDepth(1);
   var chars=[];for(var k in ART_CHAR){chars.push(ART_CHAR[k]);}
-  chars=chars.concat(['art_boss']);
   for(var i=0;i<chars.length;i++){if(this.textures.exists(chars[i])){if(makeTransparent(this,chars[i],false)){this.textures.remove(chars[i]);}}}
   var softUis=['art_leaf','art_bone','art_paw','art_tree'];
   var hardUis=['art_chest','art_gem','art_coin','art_dust','art_gear','art_perk'];
