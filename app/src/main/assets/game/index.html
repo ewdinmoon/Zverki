@@ -14,9 +14,10 @@ canvas{touch-action:none}
 <div id="app"></div>
 <script src="phaser.min.js"></script>
 <script>
-window.__err=[];window.__showErr=function(m){window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
+var DEBUG=false;
+window.__err=[];window.__showErr=function(m){if(!DEBUG)return;window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='59';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='60';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -501,7 +502,6 @@ class Game extends Phaser.Scene{
  }
  create(){
   var self=this;SCENE=this;
-  try{window.__showErr('CREATE START');}catch(e){}
   this.screen='menu';this.overlayActive=false;this.screenObjects=[];this.overlayObjects=[];this.miniActive=false;this.bossActive=false;this.meteorStarted=false;this.floats=[];this.petTween=null;this.bossHitTween=null;this.tapReset=null;this.critTint=null;this.comboTimer=null;this.museumTab=0;this.museumPage=0;this.bossImg=null;this.bossAura=null;this.bossHpFill=null;this.bossHpText=null;this.bossName=null;this.bossZone=null;this.bossHpBg=null;this.bossRetreatG=null;this.bossRetreatT=null;this.bossRetreatH=null;this.bossBy=360;this.bossW=320;this.bossH=320;this.rewardQueue=[];this.petsPage=0;this.gameStarted=false;this.pendingOffline=0;this.bossHallId='forest';this.bossSpId='ham';this._paused=false;this._meteorInput=null;this._expInput=null;this.turtleBad=false;
   (function(){ var cv=document.createElement('canvas');cv.width=64;cv.height=64;var cx=cv.getContext('2d');var gr=cx.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.4,'rgba(255,255,255,0.55)');gr.addColorStop(1,'rgba(255,255,255,0)');cx.fillStyle=gr;cx.fillRect(0,0,64,64); self.textures.addCanvas('radialDot',cv); })();
   this.input.on('pointerdown',function(){ac(); if(state&&state.sound){bgmStart();} });
@@ -541,7 +541,6 @@ class Game extends Phaser.Scene{
   try{ var csrc=this.textures.get(ck0); var cimg=csrc&&csrc.getSourceImage&&csrc.getSourceImage(); if(cimg&&cimg.width){nw=cimg.width;} }catch(e){}
   var s0=34/nw;
   this.coinParticles=this.add.particles(0,0,ck0,{speed:{min:120,max:260},angle:{min:200,max:340},gravityY:600,scale:{start:s0,end:s0*0.4},lifespan:700,emitting:false}).setDepth(60);
-  try{window.__showErr('CREATE DONE');setTimeout(function(){var bad=false;for(var i2=0;i2<window.__err.length;i2++){if(window.__err[i2].indexOf('JS:')===0||window.__err[i2].indexOf('LOAD FAIL')===0){bad=true;break;}}var d=document.getElementById('errbox');if(d&&!bad){d.style.display='none';}},2500);}catch(e){}
  }
  setNavVisible(v){
   var i;
@@ -863,7 +862,6 @@ class Game extends Phaser.Scene{
   if(this._paused)return;
   var isCrit=Math.random()<Math.min(0.6,critChance(state.critLv)*perkMult('crit'));
   var dmg=Math.floor(this.baseClickDmg()*comboMult(state.combo)*(isCrit?3:1));
-  try{window.__showErr('HIT '+dmg);}catch(e){}
   state.combo++;this.bossHp-=dmg;bumpQuest('boss',0);
   sfx('hit');
   if(this.bossImg){ this.bossImg.setTint(0xffffff); var bi2=this.bossImg; this.time.delayedCall(60,function(){ if(bi2)bi2.clearTint(); }); }
@@ -1487,7 +1485,7 @@ class Game extends Phaser.Scene{
   if(!hallUnlocked(h)){
    var prev=hallById(h.unlock.hall);
    this.addS(this.add.text(W/2,gy+40,tf('mus_locked',{h:hallName(h)}),{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#ff9a9a',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
-   this.addS(this.add.text(W/2,gy+75,tf('mus_prev',{h:hallName(prev)}),{fontSize:FS.sm,fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
+   this.addS(this.add.text(W/2,gy+75,tf('mus_prev',{h:hallName(prev)}),{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
    this.addS(this.add.text(W/2,gy+140,tf('mus_reward',{a:Math.round(h.bonus*100*rankOf(h))}),{fontSize:FS.xs,fontFamily:FF,color:'#9fe0ff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(6));
    return;
   }
@@ -1673,7 +1671,6 @@ class Game extends Phaser.Scene{
    }
    if(best){
     best._caught=true; score+=best._golden?3300:330; sfx('coin');
-    try{window.__showErr('CATCH '+score);}catch(e){}
     scoreT.setText((state.lang==='en'?'Caught: ':'Поймано: ')+fmt(score));
     var ii=fallings.indexOf(best); if(ii>=0)fallings.splice(ii,1);
     self.tweens.killTweensOf(best);
@@ -1726,7 +1723,10 @@ class Game extends Phaser.Scene{
  fakeAd(cb){ yaRewarded(cb); }
  toast(t2){
   if(this._tt){this._tt.destroy();}
-  this._tt=this.add.text(W/2,200,t2,{fontSize:FS.base,fontStyle:'bold',fontFamily:FF,color:'#ffe08a',backgroundColor:'rgba(16,38,74,0.95)',padding:{x:16,y:10},stroke:STK.brown,strokeThickness:2}).setOrigin(0.5).setDepth(80);
+  this._tt=this.add.text(W/2,190,t2,{fontSize:26,fontStyle:'bold',fontFamily:FF,color:'#fff6c0',stroke:STK.brown,strokeThickness:5}).setOrigin(0.5).setDepth(80);
+  this._tt.setShadow(0,3,'rgba(0,0,0,0.5)',6,true,true);
+  this._tt.setScale(0.8);
+  this.tweens.add({targets:this._tt,scale:1,duration:150,ease:'Back.out'});
   var self=this;
   this.time.delayedCall(2200,function(){if(self._tt){self._tt.destroy();self._tt=null;}});
  }
