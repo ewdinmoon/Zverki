@@ -17,7 +17,7 @@ canvas{touch-action:none}
 var DEBUG=false;
 window.__err=[];window.__showErr=function(m){if(!DEBUG)return;window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='60';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='61';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -29,8 +29,8 @@ var NEW_PITY=20;
 var YAX=null,SCENE=null,CLOUD_SAVE=null,lastInter=0,_cloudT=0;
 /* ---------- I18N ---------- */
 var STR={
-ru:{loading:'Загрузка ',tab_tap:'ТАП',tab_pets:'ЗВЕРЬКИ',tab_museum:'МУЗЕЙ',tab_exp:'ЭКСП.',quests_btn:'Задания',menu_title:'ЗВЕРЬКИ',menu_sub:'Собери всех!',menu_collected:'Собрано {a} / {b}',menu_play:'ИГРАТЬ',tap_btn:'ТАП!',new_world:'✨ Новый мир',boss_btn:'⚔ Босс!',combo:'🔥 КОМБО',up_click:'Сила клика',up_crit:'Крит. удар',up_auto:'Автодоход',per_sec:'/с',gift_toast:'🎁 Получено 2 хомяка! Объедини их во вкладке ЗВЕРЬКИ',pets_title:'🧬 Мои зверьки',pets_income:'Доход зверьков: +{a}/сек',pets_hint:'Тапни по портрету или «Выбрать» — сделать активным',chest_row:'Сундук со зверьком',pity_rare:'Редкий',pity_epic:'Эпик',pity_new:'Новый',summon_row:'Призвать недостающего ({a} ост.)',all_collected:'Все открытые зверьки собраны',form:'Форма',income_pre:'доход +',count_pre:'· кол-во ×',rank_pre:'· ранг',no_coll:'(нет в коллекции)',sel:'ВЫБРАТЬ',active:'★ АКТИВЕН',merge:'ОБЪЕДИНИТЬ',back:'▲ Назад',next_pre:'▼ Дальше (стр ',mus_title:'🏛 Музей',mus_bonus:'Бонус собранных залов: +{a}% дохода',mus_locked:'🔒 {h} закрыт',mus_prev:'Пройди кампанию: {h}',mus_reward:'Награда за сбор: +{a}% дохода навсегда',camp_boss:'Кампания: босс {a} из {b}',camp_done:'Кампания пройдена · Ранг {a} · проход {b}/{c}',cell_open:'Открыт (не пойман)',mus_bottom:'Собери весь зал → +{a}% дохода навсегда',exp_title:'Экспедиция',exp_name:'Лесная экспедиция',exp_desc:'30 секунд — лови объекты:',exp_items:'листья · кости · лапки · кристаллы',exp_start:'▶ Начать экспедицию',exp_ad:'📺 Ускорить (реклама)',exp_notready:'Экспедиция ещё не готова',meteor_title:'☄️ МЕТЕОРИТНЫЙ ДОЖДЬ!',caught:'Поймано: ',q_title:'Ежедневные задания',q_reward:'награда: +',q_gems:' крист.',q_claim:'Забрать',q_all:'🎁 Награда за все задания',q_clicks:'Сделать 300 кликов',q_chests:'Открыть 2 сундука',q_merge:'Объединить 1 раз',q_exp:'Завершить экспедицию',q_boss:'Победить босса',perk_title:'Умения за звёздную пыль',perk_have:'У тебя: {a} пыли',perk_lv:' (ур.',perk_noten:'Не хватает звёздной пыли',perk_click:'Сила клика',perk_auto:'Автодоход',perk_crit:'Шанс крита',perk_rare:'Шанс редкого',perk_exp:'Награда экспедиций',perk_offline:'Офлайн-доход',perk_boss:'Награда боссов',perkd_click:'+10% за уровень',perkd_auto:'+10% за уровень',perkd_crit:'+5% за уровень',perkd_rare:'+10% за уровень',perkd_exp:'+10% за уровень',perkd_offline:'+10% за уровень',perkd_boss:'+5% за уровень',set_title:'⚙ Настройки',set_sound:'Звук',set_on:'ВКЛ',set_off:'ВЫКЛ',set_lang:'Язык',set_reset:'Сбросить сохранение',set_reset2:'Точно сбросить? Нажми ещё раз',ok:'Отлично',claim:'Забрать',off_title:'😴 Пока тебя не было...',off_sub:'Зверьки заработали:',login_title:'🔥 День ',login_row:' подряд!',login_day:'Награда дня:',boss_title:'👹 Босс: ',boss_rank:' (ранг ',boss_retreat:'🏳 Отступить',boss_win:'👹 Босс повержен!',rew_coins:' монет, +',rew_gems:' кристаллов.',rew_newpet:' Новый зверёк: ',rew_nowactive:' (теперь активен)!',rew_hallopen:' Открыт ',rew_active:'! Активен: ',rew_rankup:' → ранг ',hall_done:' собран! +',hall_done2:'% дохода, +5 кристаллов, +2 пыль',hall_title:'🏆 Зал собран!',prest_title:'✨ Новый мир',prest_reset:'Сбросится: монеты, уровни клика/крита/авто',prest_keep:'Останется: зверьки, залы, ранги, перки, пыль',prest_get:'Получишь: +',prest_dust:' звёздной пыли',prest_inc:'Постоянный доход: +',prest_note:'Каждый престиж ускоряет весь забег на 10%.',prest_yes:'Переродиться',prest_no:'Отмена',prest_need:'Нужно заработать ',prest_low:'Слишком мало для престижа',prest_done:'✨ Перерождение!',prest_done2:' звёздной пыли. Постоянный доход теперь +',prest_done3:'%. Потрать пыль на умения.',toast_active:'⭐ Активный: ',toast_merge:'✨ ',toast_merge2:' → форма ',toast_nocoins:'Не хватает монет',toast_nogems:'Не хватает кристаллов',summon_title:'🧬 Призыв!',summon_join:' присоединился к тебе!',quest_gems:' кристаллов',allq_title:'🎁 Все задания выполнены!',allq_body:'+5 кристаллов, +1 пыль. Новый зверёк: ',exp_done:'Экспедиция завершена!',exp_found:' Найден зверёк: ',exp_coins:' монет, +',exp_gems:' кристаллов.',meteor_done:'☄️ Метеоритный дождь!',meteor_coins:' монет',meteor_gems:', +',meteor_gems2:' кристаллов',meteor_next:'. Завтра будет новое событие!'},
-en:{loading:'Loading ',tab_tap:'TAP',tab_pets:'PETS',tab_museum:'MUSEUM',tab_exp:'EXP.',quests_btn:'Quests',menu_title:'CRITTERS',menu_sub:'Collect them all!',menu_collected:'Collected {a} / {b}',menu_play:'PLAY',tap_btn:'TAP!',new_world:'✨ New World',boss_btn:'⚔ Boss!',combo:'🔥 COMBO',up_click:'Click Power',up_crit:'Crit Chance',up_auto:'Auto Income',per_sec:'/s',gift_toast:'🎁 Got 2 hamsters! Merge them in the PETS tab',pets_title:'🧬 My Pets',pets_income:'Pet income: +{a}/s',pets_hint:'Tap a portrait or "Select" to make it active',chest_row:'Pet Chest',pity_rare:'Rare',pity_epic:'Epic',pity_new:'New',summon_row:'Summon missing ({a} left)',all_collected:'All unlocked pets collected',form:'Form',income_pre:'income +',count_pre:'· count ×',rank_pre:'· rank',no_coll:'(not in collection)',sel:'SELECT',active:'★ ACTIVE',merge:'MERGE',back:'▲ Back',next_pre:'▼ Next (page ',mus_title:'🏛 Museum',mus_bonus:'Collected halls bonus: +{a}% income',mus_locked:'🔒 {h} locked',mus_prev:'Beat the campaign: {h}',mus_reward:'Collection reward: +{a}% income forever',camp_boss:'Campaign: boss {a} of {b}',camp_done:'Campaign done · Rank {a} · run {b}/{c}',cell_open:'Unlocked (not caught)',mus_bottom:'Collect the whole hall → +{a}% income forever',exp_title:'Expedition',exp_name:'Forest Expedition',exp_desc:'30 seconds — catch items:',exp_items:'leaves · bones · paws · gems',exp_start:'▶ Start Expedition',exp_ad:'📺 Speed up (ad)',exp_notready:'Expedition not ready yet',meteor_title:'☄️ METEOR SHOWER!',caught:'Caught: ',q_title:'Daily Quests',q_reward:'reward: +',q_gems:' gems',q_claim:'Claim',q_all:'🎁 All quests reward',q_clicks:'Make 300 taps',q_chests:'Open 2 chests',q_merge:'Merge 1 time',q_exp:'Finish an expedition',q_boss:'Defeat a boss',perk_title:'Star Dust Skills',perk_have:'You have: {a} dust',perk_lv:' (lv.',perk_noten:'Not enough star dust',perk_click:'Click Power',perk_auto:'Auto Income',perk_crit:'Crit Chance',perk_rare:'Rare Chance',perk_exp:'Expedition Reward',perk_offline:'Offline Income',perk_boss:'Boss Reward',perkd_click:'+10% per level',perkd_auto:'+10% per level',perkd_crit:'+5% per level',perkd_rare:'+10% per level',perkd_exp:'+10% per level',perkd_offline:'+10% per level',perkd_boss:'+5% per level',set_title:'⚙ Settings',set_sound:'Sound',set_on:'ON',set_off:'OFF',set_lang:'Language',set_reset:'Reset save',set_reset2:'Sure? Tap again',ok:'Great',claim:'Claim',off_title:'😴 While you were away...',off_sub:'Your pets earned:',login_title:'🔥 Day ',login_row:' in a row!',login_day:'Reward of the day:',boss_title:'👹 Boss: ',boss_rank:' (rank ',boss_retreat:'🏳 Retreat',boss_win:'👹 Boss defeated!',rew_coins:' coins, +',rew_gems:' gems.',rew_newpet:' New pet: ',rew_nowactive:' (now active)!',rew_hallopen:' Opened ',rew_active:'! Active: ',rew_rankup:' → rank ',hall_done:' collected! +',hall_done2:'% income, +5 gems, +2 dust',hall_title:'🏆 Hall collected!',prest_title:'✨ New World',prest_reset:'Resets: coins, click/crit/auto levels',prest_keep:'Kept: pets, halls, ranks, skills, dust',prest_get:'You get: +',prest_dust:' star dust',prest_inc:'Permanent income: +',prest_note:'Each prestige speeds up the whole run by 10%.',prest_yes:'Rebirth',prest_no:'Cancel',prest_need:'Need to earn ',prest_low:'Too little for prestige',prest_done:'✨ Rebirth!',prest_done2:' star dust. Permanent income is now +',prest_done3:'%. Spend dust on skills.',toast_active:'⭐ Active: ',toast_merge:'✨ ',toast_merge2:' → Form ',toast_nocoins:'Not enough coins',toast_nogems:'Not enough gems',summon_title:'🧬 Summon!',summon_join:' joined you!',quest_gems:' gems',allq_title:'🎁 All quests done!',allq_body:'+5 gems, +1 dust. New pet: ',exp_done:'Expedition complete!',exp_found:' Found pet: ',exp_coins:' coins, +',exp_gems:' gems.',meteor_done:'☄️ Meteor shower!',meteor_coins:' coins',meteor_gems:', +',meteor_gems2:' gems',meteor_next:'. A new event tomorrow!'}
+ru:{loading:'Загрузка ',tab_tap:'ТАП',tab_pets:'ЗВЕРЬКИ',tab_museum:'МУЗЕЙ',tab_exp:'ЭКСП.',quests_btn:'Задания',menu_title:'ЗВЕРЬКИ',menu_sub:'Собери всех!',menu_collected:'Собрано {a} / {b}',menu_play:'ИГРАТЬ',tap_btn:'ТАП!',new_world:'✨ Новый мир',boss_btn:'⚔ Босс!',combo:'🔥 КОМБО',up_click:'Сила клика',up_crit:'Крит. удар',up_auto:'Автодоход',per_sec:'/с',gift_toast:'🎁 Получено 2 хомяка! Объедини их во вкладке ЗВЕРЬКИ',pets_title:'Мои зверьки',pets_income:'Доход зверьков: +{a}/сек',pets_hint:'Тапни по портрету или «Выбрать» — сделать активным',chest_row:'Сундук со зверьком',pity_rare:'Редкий',pity_epic:'Эпик',pity_new:'Новый',summon_row:'Призвать недостающего ({a} ост.)',all_collected:'Все открытые зверьки собраны',form:'Форма',income_pre:'доход +',count_pre:'· кол-во ×',rank_pre:'· ранг',no_coll:'(нет в коллекции)',sel:'ВЫБРАТЬ',active:'★ АКТИВЕН',merge:'ОБЪЕДИНИТЬ',back:'▲ Назад',next_pre:'▼ Дальше (стр ',mus_title:'🏛 Музей',mus_bonus:'Бонус собранных залов: +{a}% дохода',mus_locked:'🔒 {h} закрыт',mus_prev:'Пройди кампанию: {h}',mus_reward:'Награда за сбор: +{a}% дохода навсегда',camp_boss:'Кампания: босс {a} из {b}',camp_done:'Кампания пройдена · Ранг {a} · проход {b}/{c}',cell_open:'Открыт (не пойман)',mus_bottom:'Собери весь зал → +{a}% дохода навсегда',exp_title:'Экспедиция',exp_name:'Лесная экспедиция',exp_desc:'30 секунд — лови объекты:',exp_items:'листья · кости · лапки · кристаллы',exp_start:'▶ Начать экспедицию',exp_ad:'📺 Ускорить (реклама)',exp_notready:'Экспедиция ещё не готова',meteor_title:'☄️ МЕТЕОРИТНЫЙ ДОЖДЬ!',caught:'Поймано: ',q_title:'Ежедневные задания',q_reward:'награда: +',q_gems:' крист.',q_claim:'Забрать',q_all:'🎁 Награда за все задания',q_clicks:'Сделать 300 кликов',q_chests:'Открыть 2 сундука',q_merge:'Объединить 1 раз',q_exp:'Завершить экспедицию',q_boss:'Победить босса',perk_title:'Умения за звёздную пыль',perk_have:'У тебя: {a} пыли',perk_lv:' (ур.',perk_noten:'Не хватает звёздной пыли',perk_click:'Сила клика',perk_auto:'Автодоход',perk_crit:'Шанс крита',perk_rare:'Шанс редкого',perk_exp:'Награда экспедиций',perk_offline:'Офлайн-доход',perk_boss:'Награда боссов',perkd_click:'+10% за уровень',perkd_auto:'+10% за уровень',perkd_crit:'+5% за уровень',perkd_rare:'+10% за уровень',perkd_exp:'+10% за уровень',perkd_offline:'+10% за уровень',perkd_boss:'+5% за уровень',set_title:'⚙ Настройки',set_sound:'Звук',set_on:'ВКЛ',set_off:'ВЫКЛ',set_lang:'Язык',set_reset:'Сбросить сохранение',set_reset2:'Точно сбросить? Нажми ещё раз',ok:'Отлично',claim:'Забрать',off_title:'😴 Пока тебя не было...',off_sub:'Зверьки заработали:',login_title:'🔥 День ',login_row:' подряд!',login_day:'Награда дня:',boss_title:'👹 Босс: ',boss_rank:' (ранг ',boss_retreat:'🏳 Отступить',boss_win:'👹 Босс повержен!',rew_coins:' монет, +',rew_gems:' кристаллов.',rew_newpet:' Новый зверёк: ',rew_nowactive:' (теперь активен)!',rew_hallopen:' Открыт ',rew_active:'! Активен: ',rew_rankup:' → ранг ',hall_done:' собран! +',hall_done2:'% дохода, +5 кристаллов, +2 пыль',hall_title:'🏆 Зал собран!',prest_title:'✨ Новый мир',prest_reset:'Сбросится: монеты, уровни клика/крита/авто',prest_keep:'Останется: зверьки, залы, ранги, перки, пыль',prest_get:'Получишь: +',prest_dust:' звёздной пыли',prest_inc:'Постоянный доход: +',prest_note:'Каждый престиж ускоряет весь забег на 10%.',prest_yes:'Переродиться',prest_no:'Отмена',prest_need:'Нужно заработать ',prest_low:'Слишком мало для престижа',prest_done:'✨ Перерождение!',prest_done2:' звёздной пыли. Постоянный доход теперь +',prest_done3:'%. Потрать пыль на умения.',toast_active:'⭐ Активный: ',toast_merge:'✨ ',toast_merge2:' → форма ',toast_nocoins:'Не хватает монет',toast_nogems:'Не хватает кристаллов',summon_title:'🧬 Призыв!',summon_join:' присоединился к тебе!',quest_gems:' кристаллов',allq_title:'Все задания выполнены!',allq_body:'+5 кристаллов, +1 пыль. Новый зверёк: ',exp_done:'Экспедиция завершена!',exp_found:' Найден зверёк: ',exp_coins:' монет, +',exp_gems:' кристаллов.',meteor_done:'☄️ Метеоритный дождь!',meteor_coins:' монет',meteor_gems:', +',meteor_gems2:' кристаллов',meteor_next:'. Завтра будет новое событие!',free_chest:'🎁 Бесплатный сундук (реклама)',free_chest_done:'🎁 Бесплатный сундук: получен сегодня',free_watch:'📺 Смотреть'},
+en:{loading:'Loading ',tab_tap:'TAP',tab_pets:'PETS',tab_museum:'MUSEUM',tab_exp:'EXP.',quests_btn:'Quests',menu_title:'CRITTERS',menu_sub:'Collect them all!',menu_collected:'Collected {a} / {b}',menu_play:'PLAY',tap_btn:'TAP!',new_world:'✨ New World',boss_btn:'⚔ Boss!',combo:'🔥 COMBO',up_click:'Click Power',up_crit:'Crit Chance',up_auto:'Auto Income',per_sec:'/s',gift_toast:'🎁 Got 2 hamsters! Merge them in the PETS tab',pets_title:'My Pets',pets_income:'Pet income: +{a}/s',pets_hint:'Tap a portrait or "Select" to make it active',chest_row:'Pet Chest',pity_rare:'Rare',pity_epic:'Epic',pity_new:'New',summon_row:'Summon missing ({a} left)',all_collected:'All unlocked pets collected',form:'Form',income_pre:'income +',count_pre:'· count ×',rank_pre:'· rank',no_coll:'(not in collection)',sel:'SELECT',active:'★ ACTIVE',merge:'MERGE',back:'▲ Back',next_pre:'▼ Next (page ',mus_title:'🏛 Museum',mus_bonus:'Collected halls bonus: +{a}% income',mus_locked:'🔒 {h} locked',mus_prev:'Beat the campaign: {h}',mus_reward:'Collection reward: +{a}% income forever',camp_boss:'Campaign: boss {a} of {b}',camp_done:'Campaign done · Rank {a} · run {b}/{c}',cell_open:'Unlocked (not caught)',mus_bottom:'Collect the whole hall → +{a}% income forever',exp_title:'Expedition',exp_name:'Forest Expedition',exp_desc:'30 seconds — catch items:',exp_items:'leaves · bones · paws · gems',exp_start:'▶ Start Expedition',exp_ad:'📺 Speed up (ad)',exp_notready:'Expedition not ready yet',meteor_title:'☄️ METEOR SHOWER!',caught:'Caught: ',q_title:'Daily Quests',q_reward:'reward: +',q_gems:' gems',q_claim:'Claim',q_all:'🎁 All quests reward',q_clicks:'Make 300 taps',q_chests:'Open 2 chests',q_merge:'Merge 1 time',q_exp:'Finish an expedition',q_boss:'Defeat a boss',perk_title:'Star Dust Skills',perk_have:'You have: {a} dust',perk_lv:' (lv.',perk_noten:'Not enough star dust',perk_click:'Click Power',perk_auto:'Auto Income',perk_crit:'Crit Chance',perk_rare:'Rare Chance',perk_exp:'Expedition Reward',perk_offline:'Offline Income',perk_boss:'Boss Reward',perkd_click:'+10% per level',perkd_auto:'+10% per level',perkd_crit:'+5% per level',perkd_rare:'+10% per level',perkd_exp:'+10% per level',perkd_offline:'+10% per level',perkd_boss:'+5% per level',set_title:'⚙ Settings',set_sound:'Sound',set_on:'ON',set_off:'OFF',set_lang:'Language',set_reset:'Reset save',set_reset2:'Sure? Tap again',ok:'Great',claim:'Claim',off_title:'😴 While you were away...',off_sub:'Your pets earned:',login_title:'🔥 Day ',login_row:' in a row!',login_day:'Reward of the day:',boss_title:'👹 Boss: ',boss_rank:' (rank ',boss_retreat:'🏳 Retreat',boss_win:'👹 Boss defeated!',rew_coins:' coins, +',rew_gems:' gems.',rew_newpet:' New pet: ',rew_nowactive:' (now active)!',rew_hallopen:' Opened ',rew_active:'! Active: ',rew_rankup:' → rank ',hall_done:' collected! +',hall_done2:'% income, +5 gems, +2 dust',hall_title:'🏆 Hall collected!',prest_title:'✨ New World',prest_reset:'Resets: coins, click/crit/auto levels',prest_keep:'Kept: pets, halls, ranks, skills, dust',prest_get:'You get: +',prest_dust:' star dust',prest_inc:'Permanent income: +',prest_note:'Each prestige speeds up the whole run by 10%.',prest_yes:'Rebirth',prest_no:'Cancel',prest_need:'Need to earn ',prest_low:'Too little for prestige',prest_done:'✨ Rebirth!',prest_done2:' star dust. Permanent income is now +',prest_done3:'%. Spend dust on skills.',toast_active:'⭐ Active: ',toast_merge:'✨ ',toast_merge2:' → Form ',toast_nocoins:'Not enough coins',toast_nogems:'Not enough gems',summon_title:'🧬 Summon!',summon_join:' joined you!',quest_gems:' gems',allq_title:'All quests done!',allq_body:'+5 gems, +1 dust. New pet: ',exp_done:'Expedition complete!',exp_found:' Found pet: ',exp_coins:' coins, +',exp_gems:' gems.',meteor_done:'☄️ Meteor shower!',meteor_coins:' coins',meteor_gems:', +',meteor_gems2:' gems',meteor_next:'. A new event tomorrow!',free_chest:'🎁 Free chest (watch ad)',free_chest_done:'🎁 Free chest: claimed today',free_watch:'📺 Watch'}
 };
 function t(k){var d=STR[state.lang]||STR.ru;return d[k]!==undefined?d[k]:(STR.ru[k]!==undefined?STR.ru[k]:k);}
 function tf(k,o){var s=t(k);for(var p in o){s=s.split('{'+p+'}').join(o[p]);}return s;}
@@ -279,7 +279,7 @@ function perkCost(id){var p=null;for(var i=0;i<PERKS.length;i++){if(PERKS[i].id=
 var QUESTS=[{id:'clicks',goal:300,rewardGems:3},{id:'chests',goal:2,rewardGems:3},{id:'merge',goal:1,rewardGems:2},{id:'exp',goal:1,rewardGems:3},{id:'boss',goal:1,rewardGems:4}];
 var LOGIN_REWARDS=[{coins:200,gems:1,lru:'+200 монет +1 кристалл',len:'+200 coins +1 gem'},{coins:400,gems:2,lru:'+400 монет +2 кристалла',len:'+400 coins +2 gems'},{coins:0,gems:0,dust:1,lru:'+1 пыль',len:'+1 dust'},{coins:800,gems:3,lru:'+800 монет +3 кристалла',len:'+800 coins +3 gems'},{coins:0,gems:0,dust:2,lru:'+2 пыль',len:'+2 dust'},{coins:1500,gems:5,lru:'+1500 монет +5 кристаллов',len:'+1500 coins +5 gems'},{coins:0,gems:0,rarePet:true,lru:'Редкий зверёк!',len:'Rare pet!'}];
 function loginLabel(rw){return state.lang==='en'?rw.len:rw.lru;}
-function defaultState(){var nl=(navigator.language&&navigator.language.indexOf('ru')<0)?'en':'ru';return {coins:0,gems:0,dust:0,clickLv:0,autoLv:0,critLv:0,combo:0,totalEarned:0,bossBaseEarned:0,lastSeen:Date.now(),pets:[],chestsBought:0,chestsSinceRare:0,chestsSinceEpic:0,chestsSinceNew:0,giftTaken:false,unlocked:{},museumBonus:false,expReadyAt:0,bossDefeated:0,meteorDone:false,meteorDay:0,bossReadyAt:0,perks:{},prestigeCount:0,questDay:0,questProg:{},questClaimed:{},loginStreak:0,lastLoginDay:0,hallDone:{},activePet:'ham',sound:true,lang:nl,
+function defaultState(){var nl=(navigator.language&&navigator.language.indexOf('ru')<0)?'en':'ru';return {coins:0,gems:0,dust:0,clickLv:0,autoLv:0,critLv:0,combo:0,totalEarned:0,bossBaseEarned:0,freeChestDay:0,lastSeen:Date.now(),pets:[],chestsBought:0,chestsSinceRare:0,chestsSinceEpic:0,chestsSinceNew:0,giftTaken:false,unlocked:{},museumBonus:false,expReadyAt:0,bossDefeated:0,meteorDone:false,meteorDay:0,bossReadyAt:0,perks:{},prestigeCount:0,questDay:0,questProg:{},questClaimed:{},loginStreak:0,lastLoginDay:0,hallDone:{},activePet:'ham',sound:true,lang:nl,
  camp:{},rp:{},rank:{}};}
 var state=defaultState();
 function petIncome(){var s=0;for(var i=0;i<state.pets.length;i++){var sp=speciesById(state.pets[i].speciesId);if(!sp)continue;s+=formIncome(state.pets[i].form)*speciesRank(state.pets[i].speciesId);}return s;}
@@ -316,12 +316,13 @@ function loadState(){
   if(!state.rp){state.rp={};}
   if(!state.rank){state.rank={};}
   if(typeof state.bossBaseEarned!=='number'){state.bossBaseEarned=state.totalEarned||0;}
+  if(typeof state.freeChestDay!=='number'){state.freeChestDay=0;}
   if(!state.activePet){state.activePet='ham';}
   if(!state.lang){state.lang='ru';}
   state.pets=(state.pets||[]).filter(function(p){return p&&speciesById(p.speciesId);});
   migrateCamp();
   var inc=totalPerSec();
-  var offGain=Math.floor(inc*museumMult()*perkMult('offline')*prestigeMult()*secs);
+  var offGain=Math.floor(inc*museumMult()*perkMult('offline')*prestigeMult()*secs*0.5);
   var dk=dayKey();
   if(state.lastLoginDay&&dk-state.lastLoginDay>1){state.loginStreak=0;}
   return (secs<30||inc<=0)?0:offGain;
@@ -417,7 +418,7 @@ class Game extends Phaser.Scene{
  iconKey(art,vec,px){ px=px||64; var k=this.smoothIcon(art,px); if(k)return k; if(this.textures.exists(art+'_t'))return art+'_t'; return vec; }
  coinKey(){ var k=this.smoothIcon('art_coin',64); if(k)return k; if(this.textures.exists('art_coin_t'))return 'art_coin_t'; return 'coin'; }
  pawKey(){ var k=this.smoothIcon('art_paw',64); if(k)return k; if(this.textures.exists('art_paw_t'))return 'art_paw_t'; return null; }
- perkIconKey(){ return this.iconKey('art_dust','dust',64); }
+ perkIconKey(){ return this.iconKey('art_perk','dust',64); }
  menuBgKey(){var ks=['art_bg_menu'];for(var i=0;i<ks.length;i++){if(this.textures.exists(ks[i])){return ks[i];}}return null;}
  fitHall(img){var ow=img.width||1,oh=img.height||1;var s=Math.max(W/ow,H/oh);img.setDisplaySize(ow*s,oh*s);img.setPosition(W/2,H/2);}
  currentWorldHall(){for(var i=HALLS.length-1;i>=0;i--){if(hallUnlocked(HALLS[i])){return HALLS[i];}}return HALLS[0];}
@@ -450,7 +451,9 @@ class Game extends Phaser.Scene{
  addClose(x,y,cb){
   var g=this.addO(this.add.graphics().setDepth(80));
   this.sticker(g,x-16,y-16,32,32,9,0xff7a6a,0xc03030,true);
-  this.addO(this.add.text(x,y+1,'✕',{fontSize:15,fontStyle:'bold',fontFamily:FF,color:'#fff'}).setOrigin(0.5).setDepth(81));
+  g.lineStyle(4,0xffffff,1);
+  g.lineBetween(x-6,y-6,x+6,y+6);
+  g.lineBetween(x-6,y+6,x+6,y-6);
   var h=this.addO(this.add.rectangle(x,y,32,32).setInteractive({useHandCursor:true}).setDepth(82));
   h.on('pointerup',cb);
  }
@@ -502,7 +505,7 @@ class Game extends Phaser.Scene{
  }
  create(){
   var self=this;SCENE=this;
-  this.screen='menu';this.overlayActive=false;this.screenObjects=[];this.overlayObjects=[];this.miniActive=false;this.bossActive=false;this.meteorStarted=false;this.floats=[];this.petTween=null;this.bossHitTween=null;this.tapReset=null;this.critTint=null;this.comboTimer=null;this.museumTab=0;this.museumPage=0;this.bossImg=null;this.bossAura=null;this.bossHpFill=null;this.bossHpText=null;this.bossName=null;this.bossZone=null;this.bossHpBg=null;this.bossRetreatG=null;this.bossRetreatT=null;this.bossRetreatH=null;this.bossBy=360;this.bossW=320;this.bossH=320;this.rewardQueue=[];this.petsPage=0;this.gameStarted=false;this.pendingOffline=0;this.bossHallId='forest';this.bossSpId='ham';this._paused=false;this._meteorInput=null;this._expInput=null;this.turtleBad=false;
+  this.screen='menu';this.overlayActive=false;this.screenObjects=[];this.overlayObjects=[];this.miniActive=false;this.bossActive=false;this.meteorStarted=false;this.floats=[];this.petTween=null;this.bossHitTween=null;this.tapReset=null;this.critTint=null;this.comboTimer=null;this.museumTab=0;this.museumPage=0;this.bossImg=null;this.bossAura=null;this.bossHpFill=null;this.bossHpText=null;this.bossName=null;this.bossZone=null;this.bossHpBg=null;this.bossRetreatG=null;this.bossRetreatT=null;this.bossRetreatH=null;this.bossBy=360;this.bossW=320;this.bossH=320;this.rewardQueue=[];this.petsPage=0;this.gameStarted=false;this.pendingOffline=0;this.bossHallId='forest';this.bossSpId='ham';this._paused=false;this._meteorInput=null;this._expInput=null;this._dblUsed=false;this._offDbl=false;this.turtleBad=false;
   (function(){ var cv=document.createElement('canvas');cv.width=64;cv.height=64;var cx=cv.getContext('2d');var gr=cx.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(0.4,'rgba(255,255,255,0.55)');gr.addColorStop(1,'rgba(255,255,255,0)');cx.fillStyle=gr;cx.fillRect(0,0,64,64); self.textures.addCanvas('radialDot',cv); })();
   this.input.on('pointerdown',function(){ac(); if(state&&state.sound){bgmStart();} });
   if(!this._visHooked){this._visHooked=true;document.addEventListener('visibilitychange',function(){ if(window.__resetting)return; if(document.hidden){ save(); saveCloud(true); pauseGame(true); } else { pauseGame(false); } });}
@@ -648,7 +651,7 @@ class Game extends Phaser.Scene{
   fill.fillStyle(0x6fd06f,1);fill.fillRoundedRect(px0+2,py+2,fw-4,10,5);
   fill.fillStyle(0xffffff,0.35);fill.fillRoundedRect(px0+2,py+2,fw-4,4,2);
   this.addS(this.add.text(W/2,py+7,gotN+' / '+total,{fontSize:11,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(7));
-  var spots=[['jelly',0.16,0.28,58],['unimech',0.50,0.27,58],['cat',0.84,0.28,58],['ham',0.26,0.42,66],['frog',0.62,0.42,62],['hen',0.12,0.57,56],['turtle',0.44,0.57,56],['drag',0.76,0.57,56],['duck',0.20,0.70,56],['alien',0.55,0.70,56],['golem',0.86,0.70,56]];
+  var spots=[['jelly',0.18,0.27,73],['unimech',0.50,0.27,73],['cat',0.82,0.27,73],['ham',0.30,0.42,73],['frog',0.68,0.42,73],['hen',0.14,0.57,73],['turtle',0.46,0.57,73],['drag',0.80,0.57,73],['duck',0.26,0.70,73],['alien',0.58,0.70,73],['golem',0.88,0.70,73]];
   for(var i=0;i<spots.length;i++){
    var id=spots[i][0];
    var ck=this.charKeyB(id);
@@ -1008,18 +1011,19 @@ class Game extends Phaser.Scene{
    this.showReward(t('hall_title'),lines.join('\n'),'#f0a020');
   }
  }
- showReward(title,body,accentColor){
-  if(this.overlayActive){this.rewardQueue=this.rewardQueue||[];this.rewardQueue.push({t:title,b:body,c:accentColor});return;}
-  this.presentReward(title,body,accentColor);
+ showReward(title,body,accentColor,dblCb){
+  if(this.overlayActive){this.rewardQueue=this.rewardQueue||[];this.rewardQueue.push({t:title,b:body,c:accentColor,d:dblCb});return;}
+  this.presentReward(title,body,accentColor,dblCb);
  }
- presentReward(title,body,accentColor){
-  var self=this;this.overlayActive=true;sfx('reward');
+ presentReward(title,body,accentColor,dblCb){
+  var self=this;this.overlayActive=true;this._dblUsed=false;sfx('reward');
   var dim=this.addO(this.add.rectangle(W/2,H/2,W,H,0x000000).setAlpha(0.6).setDepth(70).setInteractive({useHandCursor:true}));
   dim.on('pointerdown',function(){});
   var pc=Phaser.Display.Color.HexStringToColor(accentColor||'#4aa0e8').color;
+  var phH=dblCb?330:280;
   var panel=this.addO(this.add.graphics().setDepth(71));
-  this.sticker(panel,W/2-175,H/2-140,350,280,18,0x3f8fd0,0x1b4f8a);
-  panel.lineStyle(4,pc,1);panel.strokeRoundedRect(W/2-171,H/2-136,342,272,14);
+  this.sticker(panel,W/2-175,H/2-140,350,phH,18,0x3f8fd0,0x1b4f8a);
+  panel.lineStyle(4,pc,1);panel.strokeRoundedRect(W/2-171,H/2-136,342,phH-8,14);
   var m=String(title).match(/^([^\wа-яА-Яa-zA-Z0-9]+)([\s\S]*)$/);
   var pre='',main=title;
   if(m&&m[2]){pre=m[1];main=m[2];}
@@ -1029,17 +1033,34 @@ class Game extends Phaser.Scene{
    pObj.setX(W/2 - tObj.width/2 - pObj.width/2 - 8);
   }
   this.addO(this.add.text(W/2,H/2-25,body,{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#fff',align:'center',wordWrap:{width:310},lineSpacing:6,stroke:STK.brown,strokeThickness:2}).setOrigin(0.5).setDepth(72));
+  if(dblCb){
+   var dbg=this.addO(this.add.graphics().setDepth(72));
+   this.sticker(dbg,W/2-80,H/2+68,160,44,12,0x4aa8e8,0x1a60b0);
+   this.addO(this.add.text(W/2,H/2+90,'📺 ×2',{fontSize:FS.base,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(73));
+   var dbh=this.addO(this.add.rectangle(W/2,H/2+90,160,44).setInteractive({useHandCursor:true}).setDepth(74));
+   dbh.on('pointerup',function(){
+    if(self._dblUsed){return;}
+    self._dblUsed=true;dbh.setInteractive(false);sfx('ui');
+    yaRewarded(function(){
+     dblCb();save();saveCloud(true);self.refreshTop();sfx('reward');
+     self.clearOverlay();
+     if(self.rewardQueue&&self.rewardQueue.length){var n=self.rewardQueue.shift();self.presentReward(n.t,n.b,n.c,n.d);}
+    });
+   });
+  }
+  var okY=dblCb?H/2+142:H/2+90;
   var ok=this.addO(this.add.graphics().setDepth(72));
-  this.sticker(ok,W/2-80,H/2+68,160,44,12,0xffc040,0xc07000);
-  this.addO(this.add.text(W/2,H/2+90,t('ok'),{fontSize:FS.base,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(73));
-  var okh=this.addO(this.add.rectangle(W/2,H/2+90,160,44).setInteractive({useHandCursor:true}).setDepth(74));
+  this.sticker(ok,W/2-80,okY-22,160,44,12,0xffc040,0xc07000);
+  this.addO(this.add.text(W/2,okY,t('ok'),{fontSize:FS.base,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(73));
+  var okh=this.addO(this.add.rectangle(W/2,okY,160,44).setInteractive({useHandCursor:true}).setDepth(74));
   okh.on('pointerup',function(){
    sfx('ui');
    self.clearOverlay();
-   if(self.rewardQueue&&self.rewardQueue.length){var n=self.rewardQueue.shift();self.presentReward(n.t,n.b,n.c);return;}
+   if(self.rewardQueue&&self.rewardQueue.length){var n=self.rewardQueue.shift();self.presentReward(n.t,n.b,n.c,n.d);return;}
    if(self.screen==='tap'){ self.clearScreen(); self.showTap(); }
    else if(self.screen==='pets'){self.clearScreen();self.showPets();}
    else if(self.screen==='museum'){self.clearScreen();self.showMuseum();}
+   else if(self.screen==='exp'){self.clearScreen();self.showExpedition();}
    else if(self.screen==='menu'){self.clearScreen();self.showMenu();}
   });
  }
@@ -1062,7 +1083,7 @@ class Game extends Phaser.Scene{
   okh.on('pointerup',function(){
    sfx('ui');
    self.clearOverlay();
-   if(self.rewardQueue&&self.rewardQueue.length){var n=self.rewardQueue.shift();self.presentReward(n.t,n.b,n.c);return;}
+   if(self.rewardQueue&&self.rewardQueue.length){var n=self.rewardQueue.shift();self.presentReward(n.t,n.b,n.c,n.d);return;}
    self.clearScreen();self.showPets();
   });
  }
@@ -1096,6 +1117,7 @@ class Game extends Phaser.Scene{
    state.coins=0;state.clickLv=0;state.autoLv=0;state.critLv=0;state.totalEarned=0;state.combo=0;state.bossDefeated=0;state.bossReadyAt=0;state.bossBaseEarned=0;
    save();saveCloud(true);sfx('win');self.clearOverlay();self.clearScreen();self.showTap();self.refreshTop();
    self.showReward(t('prest_done'),'+'+dust+t('prest_done2')+Math.round((prestigeMult()-1)*100)+t('prest_done3'),'#9c27b0');
+   yaInter();
   });
  }
  openPerks(){
@@ -1104,7 +1126,7 @@ class Game extends Phaser.Scene{
   dim.on('pointerdown',function(){});
   var panel=this.addO(this.add.graphics().setDepth(71));
   this.sticker(panel,W/2-215,H/2-310,430,620,18,0xb060e0,0x400860);
-  this.addO(this.add.image(W/2-175,H/2-282,this.iconKey('art_dust','dust',64)).setDisplaySize(30,30).setOrigin(0.5,0.5).setDepth(72));
+  this.addO(this.add.image(W/2-175,H/2-282,this.iconKey('art_perk','dust',64)).setDisplaySize(30,30).setOrigin(0.5,0.5).setDepth(72));
   this.addO(this.add.text(W/2+10,H/2-282,t('perk_title'),{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#fff6c0',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(72));
   this.addO(this.add.text(W/2,H/2-254,tf('perk_have',{a:state.dust}),{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5).setDepth(72));
   var gy=H/2-225;
@@ -1240,6 +1262,19 @@ class Game extends Phaser.Scene{
   bonusRow.fillStyle(allDone?0x1b4f2a:0x223a5a,0.95);bonusRow.fillRoundedRect(40,gy,400,50,10);
   bonusRow.lineStyle(2,allDone?0x6fd06f:0x3a5575,1);bonusRow.strokeRoundedRect(40,gy,400,50,10);
   self.addO(self.add.text(54,gy+25,t('q_all'),{fontSize:FS.xs,fontStyle:'bold',fontFamily:FF,color:allDone?'#fff':'#9fc0e8',stroke:STK.brown,strokeThickness:2}).setOrigin(0,0.5).setDepth(73));
+  if(allDone && !state.questClaimed['allad']){
+   var abtn=self.addO(self.add.graphics().setDepth(74));
+   self.sticker(abtn,215,gy+8,105,34,10,0x4aa8e8,0x1a60b0);
+   self.addO(self.add.text(267,gy+25,'📺 +1 '+ (state.lang==='en'?'dust':'пыль'),{fontSize:FS.xs,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(75));
+   var ahit=self.addO(self.add.rectangle(267,gy+25,105,34).setInteractive({useHandCursor:true}).setDepth(76));
+   ahit.on('pointerup',function(){
+    sfx('ui');
+    yaRewarded(function(){
+     state.dust+=1;state.questClaimed['allad']=true;save();saveCloud(true);sfx('reward');
+     self.clearOverlay();self.openQuests();self.refreshTop();
+    });
+   });
+  }
   if(allDone && !state.questClaimed['all']){
    var bbtn=self.addO(self.add.graphics().setDepth(74));
    self.sticker(bbtn,330,gy+8,100,34,10,0xffc040,0xc07000);
@@ -1298,6 +1333,24 @@ class Game extends Phaser.Scene{
   this.clearScreen();
   if(this.screen==='tap'){this.showTap();}else{this.showPets();}
  }
+ chestRoll(){
+  var missing=missingSpecies();var sp;
+  if((state.chestsSinceNew||0)>=NEW_PITY&&missing.length>0){sp=missing[0];}
+  else{sp=rollSpecies(rollRarity());}
+  var wasNew=!state.unlocked[sp.id];
+  addPet(sp.id,1);
+  if(wasNew){state.chestsSinceNew=0;}else{state.chestsSinceNew=(state.chestsSinceNew||0)+1;}
+  return sp;
+ }
+ freeChestAd(){
+  var self=this;
+  if(state.freeChestDay===dayKey()){return;}
+  yaRewarded(function(){
+   state.freeChestDay=dayKey();bumpQuest('chests',1);
+   var sp=self.chestRoll();
+   save();saveCloud(true);self.refreshTop();self.checkHalls();self.presentChest(sp,sp.rarity);
+  });
+ }
  showPets(){
   var self=this;
   this.setTopBarVisible(true);
@@ -1343,6 +1396,21 @@ class Game extends Phaser.Scene{
    sg.fillStyle(0x223a5a,0.6);sg.fillRoundedRect(20,218,W-40,40,10);
    this.addS(this.add.text(W/2,238,t('all_collected'),{fontSize:FS.xs,fontFamily:FF,color:'#9fe0ff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(7));
   }
+  var freeDone=state.freeChestDay===dayKey();
+  var fgr=this.addS(this.add.graphics().setDepth(6));
+  fgr.fillStyle(freeDone?0x223a5a:0x1d4a7a,0.95);fgr.fillRoundedRect(20,262,W-40,40,10);
+  fgr.lineStyle(2,freeDone?0x3a5575:0xffd23e,1);fgr.strokeRoundedRect(20,262,W-40,40,10);
+  this.addS(this.add.text(36,282,freeDone?t('free_chest_done'):t('free_chest'),{fontSize:FS.xs,fontStyle:'bold',fontFamily:FF,color:freeDone?'#9fc0e8':'#ffe08a',stroke:STK.brown,strokeThickness:2}).setOrigin(0,0.5).setDepth(7));
+  var fbg=this.addS(this.add.graphics().setDepth(7));
+  if(freeDone){
+   this.sticker(fbg,W-130,268,110,28,8,0x3a5575,0x1a2a4a,true);
+   this.addS(this.add.text(W-75,282,'✓',{fontSize:FS.sm,fontStyle:'bold',fontFamily:FF,color:'#5fc04a',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(8));
+  }else{
+   this.sticker(fbg,W-130,268,110,28,8,0x4aa8e8,0x1a60b0,true);
+   this.addS(this.add.text(W-75,282,t('free_watch'),{fontSize:FS.xs,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5,0.5).setDepth(8));
+   var fh=this.addS(this.add.rectangle(W-75,282,110,28).setInteractive({useHandCursor:true}).setDepth(60));
+   fh.on('pointerup',function(){if(self.overlayActive||self.miniActive){return;}sfx('ui');self.freeChestAd();});
+  }
   var rows=[];
   var groups={};
   for(var i=0;i<state.pets.length;i++){
@@ -1366,13 +1434,13 @@ class Game extends Phaser.Scene{
   if(rows.length===0){
    for(var fi=0;fi<HALLS[0].species.length;fi++){rows.push({type:'empty',speciesId:HALLS[0].species[fi]});}
   }
-  var perPage=5;
+  var perPage=4;
   var pages=Math.max(1,Math.ceil(rows.length/perPage));
   if(this.petsPage>=pages){this.petsPage=pages-1;}
   if(this.petsPage<0){this.petsPage=0;}
   var start=this.petsPage*perPage;
   var end=Math.min(rows.length,start+perPage);
-  var gy=266;
+  var gy=306;
   for(var j=start;j<end;j++){
    (function(row,gy){
     try{
@@ -1436,13 +1504,7 @@ class Game extends Phaser.Scene{
   var cc=chestCost(state.chestsBought);
   if(state.coins<cc){sfx('err');this.toast(t('toast_nocoins'));return;}
   state.coins-=cc;state.chestsBought++;bumpQuest('chests',1);
-  var missing=missingSpecies();
-  var sp;
-  if((state.chestsSinceNew||0)>=NEW_PITY&&missing.length>0){ sp=missing[0]; }
-  else{sp=rollSpecies(rollRarity());}
-  var wasNew=!state.unlocked[sp.id];
-  addPet(sp.id,1);
-  if(wasNew){state.chestsSinceNew=0;}else{state.chestsSinceNew=(state.chestsSinceNew||0)+1;}
+  var sp=this.chestRoll();
   save();this.refreshTop();this.checkHalls();this.presentChest(sp,sp.rarity);
  }
  mergePets(speciesId,form){
@@ -1692,11 +1754,13 @@ class Game extends Phaser.Scene{
   try{
    if(this._meteorInput){this.input.off('pointerdown',this._meteorInput);this._meteorInput=null;}
    var gained=Math.floor(score*prestigeMult());
-   state.coins+=gained;state.totalEarned+=gained;var bonusGem=Math.floor(score/5000);state.gems+=bonusGem;
+   var bonusGem=Math.floor(score/5000);
+   state.coins+=gained;state.totalEarned+=gained;state.gems+=bonusGem;
    save();saveCloud(true);this.refreshTop();
    this.miniActive=false;this.meteorStarted=false;
    this.clearOverlay();
-   this.showReward(t('meteor_done'),'+'+fmt(gained)+t('meteor_coins')+(bonusGem>0?t('meteor_gems')+bonusGem+t('meteor_gems2'):'')+t('meteor_next'),'#ff8a20');
+   var msg='+'+fmt(gained)+t('meteor_coins')+(bonusGem>0?t('meteor_gems')+bonusGem+t('meteor_gems2'):'')+t('meteor_next');
+   this.showReward(t('meteor_done'),msg,'#ff8a20',function(){ state.coins+=gained; state.totalEarned+=gained; });
   }catch(e){
    this.miniActive=false;this.meteorStarted=false;
    try{this.clearOverlay();}catch(e2){}
@@ -1704,18 +1768,31 @@ class Game extends Phaser.Scene{
   }
  }
  showOffline(gained){
-  var self=this;this.overlayActive=true;
+  var self=this;this.overlayActive=true;this._offDbl=false;
   var dim=this.addO(this.add.rectangle(W/2,H/2,W,H,0x000000).setAlpha(0.6).setDepth(70).setInteractive({useHandCursor:true}));
   dim.on('pointerdown',function(){});
   var panel=this.addO(this.add.graphics().setDepth(71));
-  this.sticker(panel,W/2-185,H/2-125,370,250,18,0x3f8fd0,0x1b4f8a);
+  this.sticker(panel,W/2-185,H/2-125,370,300,18,0x3f8fd0,0x1b4f8a);
   this.addO(this.add.text(W/2,H/2-80,t('off_title'),{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#cfe6ff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(72));
   this.addO(this.add.text(W/2,H/2-40,t('off_sub'),{fontSize:FS.base,fontFamily:FF,color:'#9fe0ff',stroke:STK.brown,strokeThickness:2}).setOrigin(0.5).setDepth(72));
   this.addO(this.add.text(W/2,H/2-2,'+'+fmt(gained),{fontSize:FS.xxl,fontStyle:'bold',fontFamily:FF,color:'#ffe08a',stroke:STK.brown,strokeThickness:4}).setOrigin(0.5).setDepth(72));
+  var dbg=this.addO(this.add.graphics().setDepth(72));
+  this.sticker(dbg,W/2-85,H/2+40,170,44,12,0x4aa8e8,0x1a60b0);
+  this.addO(this.add.text(W/2,H/2+62,'📺 ×2',{fontSize:FS.base,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(73));
+  var dbh=this.addO(this.add.rectangle(W/2,H/2+62,170,44).setInteractive({useHandCursor:true}).setDepth(74));
+  dbh.on('pointerup',function(){
+   if(self._offDbl){return;}
+   self._offDbl=true;dbh.setInteractive(false);sfx('ui');
+   yaRewarded(function(){
+    state.coins+=gained;state.totalEarned+=gained;
+    save();saveCloud(true);self.refreshTop();sfx('reward');
+    self.clearOverlay();self.checkLoginReward();self.checkHalls();
+   });
+  });
   var ok=this.addO(this.add.graphics().setDepth(72));
-  this.sticker(ok,W/2-85,H/2+40,170,44,12,0xffc040,0xc07000);
-  this.addO(this.add.text(W/2,H/2+62,t('claim'),{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(73));
-  var okh=this.addO(this.add.rectangle(W/2,H/2+62,170,44).setInteractive({useHandCursor:true}).setDepth(74));
+  this.sticker(ok,W/2-85,H/2+92,170,44,12,0xffc040,0xc07000);
+  this.addO(this.add.text(W/2,H/2+114,t('claim'),{fontSize:FS.med,fontStyle:'bold',fontFamily:FF,color:'#fff',stroke:STK.brown,strokeThickness:3}).setOrigin(0.5).setDepth(73));
+  var okh=this.addO(this.add.rectangle(W/2,H/2+114,170,44).setInteractive({useHandCursor:true}).setDepth(74));
   okh.on('pointerup',function(){
    state.coins+=gained;state.totalEarned+=gained;self.refreshTop();sfx('reward');self.clearOverlay();save();saveCloud(true);self.checkLoginReward();self.checkHalls();
   });
@@ -1723,9 +1800,9 @@ class Game extends Phaser.Scene{
  fakeAd(cb){ yaRewarded(cb); }
  toast(t2){
   if(this._tt){this._tt.destroy();}
-  this._tt=this.add.text(W/2,190,t2,{fontSize:26,fontStyle:'bold',fontFamily:FF,color:'#fff6c0',stroke:STK.brown,strokeThickness:5}).setOrigin(0.5).setDepth(80);
+  this._tt=this.add.text(W/2,190,t2,{fontSize:20,fontStyle:'bold',fontFamily:FF,color:'#fff6c0',stroke:STK.brown,strokeThickness:4,align:'center',wordWrap:{width:440}}).setOrigin(0.5).setDepth(80);
   this._tt.setShadow(0,3,'rgba(0,0,0,0.5)',6,true,true);
-  this._tt.setScale(0.8);
+  this._tt.setScale(0.85);
   this.tweens.add({targets:this._tt,scale:1,duration:150,ease:'Back.out'});
   var self=this;
   this.time.delayedCall(2200,function(){if(self._tt){self._tt.destroy();self._tt=null;}});
