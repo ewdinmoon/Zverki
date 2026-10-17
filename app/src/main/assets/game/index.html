@@ -17,7 +17,7 @@ canvas{touch-action:none}
 var DEBUG=false;
 window.__err=[];window.__showErr=function(m){if(!DEBUG)return;window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='63';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='64';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -258,7 +258,7 @@ function rankOf(h){return state.rank[h.id]||1;}
 function speciesRank(spId){var h=hallOfSpecies(spId);return h?rankOf(h):1;}
 function bossClicks(h,i){var g=(hallIndex(h)-1)*5+i;return Math.floor(250*Math.pow(1.13,g));}
 function bossThresholdFor(h,i){return Math.floor(THRESH_BASE*Math.pow(THRESH_G,5*(hallIndex(h)-1)+i));}
-function bossProgress(){return Math.max(0,state.totalEarned-(state.bossBaseEarned||0));}
+function bossProgress(){return Math.max(0,state.clickEarned-(state.bossBaseClick||0));}
 function hallCollected(h){for(var i=0;i<h.species.length;i++){if(!state.unlocked[h.species[i]]){return false;}}return true;}
 function hallUnlocked(h){if(!h.unlock){return true;}var prev=hallById(h.unlock.hall);if(!prev){return true;}return (state.camp[prev.id]||0)>=prev.species.length;}
 function inUnlockedHalls(sp){for(var i=0;i<HALLS.length;i++){var h=HALLS[i];if(hallUnlocked(h)){var idx=idxOf(h,sp.id);if(idx>=0&&idx<unlockedCount(h)){return true;}}}return false;}
@@ -281,7 +281,7 @@ function perkCost(id){var p=null;for(var i=0;i<PERKS.length;i++){if(PERKS[i].id=
 var QUESTS=[{id:'clicks',goal:300,rewardGems:3},{id:'chests',goal:2,rewardGems:3},{id:'merge',goal:1,rewardGems:2},{id:'exp',goal:1,rewardGems:3},{id:'boss',goal:1,rewardGems:4}];
 var LOGIN_REWARDS=[{coins:200,gems:1,lru:'+200 монет +1 кристалл',len:'+200 coins +1 gem'},{coins:400,gems:2,lru:'+400 монет +2 кристалла',len:'+400 coins +2 gems'},{coins:0,gems:0,dust:1,lru:'+1 пыль',len:'+1 dust'},{coins:800,gems:3,lru:'+800 монет +3 кристалла',len:'+800 coins +3 gems'},{coins:0,gems:0,dust:2,lru:'+2 пыль',len:'+2 dust'},{coins:1500,gems:5,lru:'+1500 монет +5 кристаллов',len:'+1500 coins +5 gems'},{coins:0,gems:0,rarePet:true,lru:'Редкий зверёк!',len:'Rare pet!'}];
 function loginLabel(rw){return state.lang==='en'?rw.len:rw.lru;}
-function defaultState(){var nl=(navigator.language&&navigator.language.indexOf('ru')<0)?'en':'ru';return {coins:0,gems:0,dust:0,clickLv:0,autoLv:0,critLv:0,combo:0,totalEarned:0,bossBaseEarned:0,freeChestDay:0,lastSeen:Date.now(),pets:[],chestsBought:0,chestsSinceRare:0,chestsSinceEpic:0,chestsSinceNew:0,giftTaken:false,unlocked:{},museumBonus:false,expReadyAt:0,bossDefeated:0,meteorDone:false,meteorDay:0,bossReadyAt:0,perks:{},prestigeCount:0,questDay:0,questProg:{},questClaimed:{},loginStreak:0,lastLoginDay:0,hallDone:{},activePet:'ham',sound:true,lang:nl,
+function defaultState(){var nl=(navigator.language&&navigator.language.indexOf('ru')<0)?'en':'ru';return {coins:0,gems:0,dust:0,clickLv:0,autoLv:0,critLv:0,combo:0,totalEarned:0,clickEarned:0,bossBaseEarned:0,bossBaseClick:0,freeChestDay:0,lastSeen:Date.now(),pets:[],chestsBought:0,chestsSinceRare:0,chestsSinceEpic:0,chestsSinceNew:0,giftTaken:false,unlocked:{},museumBonus:false,expReadyAt:0,bossDefeated:0,meteorDone:false,meteorDay:0,bossReadyAt:0,perks:{},prestigeCount:0,questDay:0,questProg:{},questClaimed:{},loginStreak:0,lastLoginDay:0,hallDone:{},activePet:'ham',sound:true,lang:nl,
  camp:{},rp:{},rank:{}};}
 var state=defaultState();
 function petIncome(){var s=0;for(var i=0;i<state.pets.length;i++){var sp=speciesById(state.pets[i].speciesId);if(!sp)continue;s+=formIncome(state.pets[i].form)*speciesRank(state.pets[i].speciesId);}return s;}
@@ -318,6 +318,8 @@ function loadState(){
   if(!state.rp){state.rp={};}
   if(!state.rank){state.rank={};}
   if(typeof state.bossBaseEarned!=='number'){state.bossBaseEarned=state.totalEarned||0;}
+  if(typeof state.clickEarned!=='number'){state.clickEarned=0;}
+  if(typeof state.bossBaseClick!=='number'){state.bossBaseClick=0;}
   if(typeof state.freeChestDay!=='number'){state.freeChestDay=0;}
   if(!state.activePet){state.activePet='ham';}
   if(!state.lang){state.lang='ru';}
@@ -640,7 +642,9 @@ class Game extends Phaser.Scene{
   if(id==='tap'){this.showTap();}else if(id==='pets'){this.showPets();}else if(id==='museum'){this.showMuseum();}else if(id==='exp'){this.showExpedition();}
  }
  showMenu(){
-  var self=this;this.screen='menu';this.clearScreen();this.setNavVisible(false);this.setTopBarVisible(false);
+  var self=this;
+  if(this.gameStarted){this.clearScreen();this.showTap();return;}
+  this.screen='menu';this.clearScreen();this.setNavVisible(false);this.setTopBarVisible(false);
   var mk=this.menuBgKey();
   if(this.bgArt&&mk){ this.bgArt.setTexture(mk); this.fitHall(this.bgArt); this.bgArt.setVisible(true); this.menuBands.setVisible(false); }
   else if(this.bgArt){this.bgArt.setVisible(false);this.menuBands.setVisible(false);}
@@ -915,6 +919,7 @@ class Game extends Phaser.Scene{
    else{state.rp[hall.id]=rp;}
   }
   state.bossBaseEarned=state.totalEarned;
+  state.bossBaseClick=state.clickEarned;
   if(rewardSpeciesId){addPet(rewardSpeciesId,1);state.activePet=rewardSpeciesId;}
   var bossMult=perkMult('boss');
   var rewardCoins=Math.floor((5000+state.bossDefeated*3000)*bossMult*prestigeMult()*(rankOf(hall)));
@@ -952,7 +957,7 @@ class Game extends Phaser.Scene{
   var base=this.baseClickDmg();
   state.combo++;var mult=comboMult(state.combo);
   var gain=Math.floor(base*mult*(isCrit?3:1)*CLICK_GOLD_MULT);
-  state.coins+=gain;state.totalEarned+=gain;bumpQuest('clicks',1);
+  state.coins+=gain;state.totalEarned+=gain;state.clickEarned+=gain;bumpQuest('clicks',1);
   sfx(isCrit?'crit':'tap');
   var ring=this.add.graphics().setDepth(59);
   ring.lineStyle(4,0xffffff,0.85); ring.strokeCircle(0,0,12); ring.setPosition(x,y);
@@ -1124,7 +1129,7 @@ class Game extends Phaser.Scene{
   nh.on('pointerup',function(){sfx('ui');self.clearOverlay();});
   yh.on('pointerup',function(){
    state.dust+=dust;state.prestigeCount=(state.prestigeCount||0)+1;
-   state.coins=0;state.clickLv=0;state.autoLv=0;state.critLv=0;state.totalEarned=0;state.combo=0;state.bossDefeated=0;state.bossReadyAt=0;state.bossBaseEarned=0;
+   state.coins=0;state.clickLv=0;state.autoLv=0;state.critLv=0;state.totalEarned=0;state.clickEarned=0;state.combo=0;state.bossDefeated=0;state.bossReadyAt=0;state.bossBaseEarned=0;state.bossBaseClick=0;
    save();saveCloud(true);sfx('win');self.clearOverlay();self.clearScreen();self.showTap();self.refreshTop();
    self.showReward(t('prest_done'),'+'+dust+t('prest_done2')+Math.round((prestigeMult()-1)*100)+t('prest_done3'),'#9c27b0');
    yaInter();
