@@ -5,19 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Зверьки: Собери всех!</title>
 <style>
-html,body{margin:0;height:100%;overflow:hidden;background-color:#0a1830;background-image:linear-gradient(rgba(8,20,40,.65),rgba(8,20,40,.65)),url('assets/art/bg_menu.png');background-position:center,center;background-size:cover,cover;background-repeat:no-repeat,no-repeat;font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;-webkit-user-select:none;user-select:none;touch-action:none}
-#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+html,body{margin:0;height:100%;overflow:hidden;background:#0a1830;font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;-webkit-user-select:none;user-select:none;touch-action:none}
+#bbg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+#bshade{position:fixed;inset:0;background:rgba(8,20,40,.65);z-index:-1}
+#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:0}
 canvas{touch-action:none}
 </style>
 </head>
 <body>
+<img id="bbg" src="assets/art/bg_menu.png" alt="">
+<div id="bshade"></div>
 <div id="app"></div>
 <script src="phaser.min.js"></script>
 <script>
 var DEBUG=false;
 window.__err=[];window.__showErr=function(m){if(!DEBUG)return;window.__err.push(m);var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:0;right:0;bottom:0;background:#220000;color:#ffdddd;font:11px monospace;padding:6px;white-space:pre-wrap;z-index:99999';document.body.appendChild(d);}d.style.display='block';d.textContent=window.__err.slice(-8).join('\n');};window.addEventListener('error',function(e){window.__showErr('JS: '+e.message+' @line '+e.lineno);});
 'use strict';
-var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='65';
+var W=480,H=800,SAVEKEY='zverki_v7',ASSET_V='66';
 var FF="'Trebuchet MS','Segoe UI',Arial,sans-serif";
 var FS={xs:14,sm:15,base:16,med:18,lg:22,xxl:28};
 var STK={dark:0x3a2410,brown:'#3a2410'};
@@ -1233,6 +1237,7 @@ class Game extends Phaser.Scene{
    try{ if(YAX&&YAX.getPlayer){ YAX.getPlayer().then(function(p){ return p.setData({save:null},true); }).catch(function(){}); } }catch(e){}
    setTimeout(function(){location.reload();},80);
   });
+  this.addO(this.add.text(W/2,H/2+148,'build v'+ASSET_V,{fontSize:11,fontFamily:FF,color:'#9fc0e8'}).setOrigin(0.5).setDepth(74));
   self.addClose(W/2+139,H/2-134,function(){sfx('ui');self.clearOverlay();});
  }
  openQuests(){
